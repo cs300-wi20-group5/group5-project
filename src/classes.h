@@ -14,39 +14,48 @@ class PeopleTable {
 public:
     PeopleTable() {
         table = new Node * [23];
-        for(int i = 0; i < 23; ++i) {table[i] = nullptr}
+        for(int i = 0; i < 23; ++i) {table[i] = nullptr;}
     }
+    int files_read();
     int hash_function(int id);
-    int create_table();
+    int add_node(Node * to_add, int hash);
+    int add_to_end(Node * to_add, Node * current);
+    int display1();
+    int display2(Node * current);
 private:
     Node ** table;
 };
 
 class Node {
-    Node(Person * input) {
-        this -> data = input;
+public:
+    Node() {
+        data = nullptr;
         next = nullptr;
     }
-public:
+    Node(Person * input) {
+        data = input;
+        next = nullptr;
+    }
     Person * data;
     Node * next;
 };
 
 class Person {
 public:
-    Person(int new_id, char * new_name) {
+    Person(int new_id, string new_name) {
         id = new_id;
         name = new_name;
     }
     int get_id() {return this -> id;}
+    string get_name() {return this -> name;}
 protected:
     int id;
-    char * name;
+    string name;
 };
 
 class Member: public Person {
 public:
-    Member(int a, char * b) : Person(a, b) {
+    Member(int a, string b) : Person(a, b) {
     }
 private:
 
@@ -54,7 +63,7 @@ private:
 
 class Provider: public Person {
 public:
-    Provider(int a, char * b) : Person(a, b) {
+    Provider(int a, string b) : Person(a, b) {
     }
 private:
 
