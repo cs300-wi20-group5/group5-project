@@ -58,6 +58,7 @@ public:
     Member(int a, string b) : Person(a, b) {
     }
 private:
+    Member_Report * report;
 
 };
 
@@ -66,6 +67,7 @@ public:
     Provider(int a, string b) : Person(a, b) {
     }
 private:
+    Provider_Report * report;
 
 };
 
