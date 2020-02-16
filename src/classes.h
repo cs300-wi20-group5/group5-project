@@ -71,11 +71,14 @@ private:
 
 };
 
+//Below report classes will act as nodes
 class Member_Report {
 public:
-//Functions involving the provider report will go below
+//Functions involving the member report will go below
 
 private:
+	Member_Report * next;
+
 	string date_of_service;
 	string provider_name;
 	string service_name;
@@ -86,12 +89,14 @@ public:
 //Functions involving the provider report will go below
 	
 private:
-   string date_of_service;
-   string time;
-   string member_name;
-   int member_code;
-   int service_code;
-   float fee;
+	Provider_Report * next;
+
+   	string date_of_service;
+   	string time;
+   	string member_name;
+   	int member_code;
+   	int service_code;
+   	float fee;
 }
 
 
