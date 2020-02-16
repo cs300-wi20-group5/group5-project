@@ -69,5 +69,28 @@ private:
 
 };
 
+class Member_Report {
+public:
+//Functions involving the provider report will go below
+
+private:
+	string date_of_service;
+	string provider_name;
+	string service_name;
+}
+
+class Provider_Report {
+public:
+//Functions involving the provider report will go below
+	
+private:
+   string date_of_service;
+   string time;
+   string member_name;
+   int member_code;
+   int service_code;
+   float fee;
+}
+
 
 
