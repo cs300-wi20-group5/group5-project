@@ -1,9 +1,15 @@
 //code goes here
-/*
+using namespace std;
+#include "classes.h"
 
-  code planning for IO 
- 
-cout welcome to the program
+//  code planning for IO 
+int main()
+{
+	cout<<"welcome to the program"<<endl;
+	return 0;
+}
+
+/*
 cout would you like to log in as a provider or manager
 cin answer
 
