@@ -9,6 +9,8 @@ class Node;
 class Person;
 class Member;
 class Provider;
+class Member_Report;
+class Provider_Report;
 
 class PeopleTable {
 public:
@@ -75,7 +77,11 @@ class Member: public Person {
 public:
     Member(int a, string b) : Person(a, b) {
     }
+
+    //Need function to add member reports
+    
 private:
+    Member_Report * report;	//Pointer for report LLL
 
 };
 
@@ -83,8 +89,61 @@ class Provider: public Person {
 public:
     Provider(int a, string b) : Person(a, b) {
     }
-private:
 
+    //Need function to add provider reports
+
+private:
+    Provider_Report * report;
+
+};
+
+//Below report classes will act as nodes to form the reports
+class Member_Report {
+public:
+	Member_Report(string new_date, string new_name, string new_service)
+	{
+		date_of_service = new_date;
+		provider_name = new_name;
+		service_name = new_service;
+
+		next = nullptr;
+	}
+
+//Functions involving the member report will go below
+
+private:
+	Member_Report * next;
+
+	string date_of_service;
+	string provider_name;
+	string service_name;
+};
+
+class Provider_Report {
+public:
+	Provider_Report(string new_date, string new_time, string new_name, int new_memcode, int new_servcode, float new_fee)
+	{
+		date_of_service = new_date;
+		time = new_time;
+		member_name = new_name;
+		member_code = new_memcode;
+		service_code = new_servcode;
+		fee = new_fee;
+		
+		next = nullptr;
+	}
+
+//Functions involving the provider report will go below
+	
+private:
+	Provider_Report * next;
+
+   	string date_of_service;
+   	string time;
+   	string member_name;
+   	int member_code;
+   	int service_code;
+   	float fee;
 };
 
 
