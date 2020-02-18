@@ -16,7 +16,25 @@ public:
         table = new Node * [23];
         for(int i = 0; i < 23; ++i) {table[i] = nullptr;}
     }
-    int files_read();
+    /*
+    ~PeopleTable() {
+	for(int i = 0; i < 23; ++i) {
+		Node * tmp;
+		while(this->table[i]->next) {
+			tmp = this->table[i]->next;
+			delete this->table[i];
+			this->table[i] = tmp;
+		}
+		if(!this->table[i]->next) {
+			delete this->table[i];
+			this->table[i] = nullptr;
+		}
+	}
+    } */
+
+
+    int files_read(string fileName, int dataType);
+    int files_write(string fileName);
     int hash_function(int id);
     int add_node(Node * to_add, int hash);
     int add_to_end(Node * to_add, Node * current);
