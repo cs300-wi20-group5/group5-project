@@ -24,6 +24,15 @@ public:
     int add_to_end(Node * to_add, Node * current);
     int display1();
     int display2(Node * current);
+    int find_hash(int code, Node *& current);
+
+    //Functions regarding provider report below
+    int add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee);
+    int display_reports(int provider_code); 
+
+    int summary_report();
+    int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
+    
 private:
     Node ** table;
 };
@@ -48,8 +57,16 @@ public:
         id = new_id;
         name = new_name;
     }
+    virtual ~Person() {}
     int get_id() {return this -> id;}
     string get_name() {return this -> name;}
+
+    //Functions below are wrapper functions to convert Person* to Provider*
+    int add_provider_type(Provider_Report * to_add);
+    int display__provider_type();
+    int summary_report_check(int &total_providers, int &total_services, float &total_fees);
+
+
 protected:
     int id;
     string name;
@@ -63,16 +80,22 @@ public:
     //Need function to add member reports
     
 private:
-    Member_Report * report;	//Pointer for report LLL
+    Member_Report * report;
 
 };
 
 class Provider: public Person {
 public:
     Provider(int a, string b) : Person(a, b) {
+	    report = nullptr;
     }
 
-    //Need function to add provider reports
+    //int files_read();
+    //int files_write();
+    int add_report(Provider_Report * to_add);
+    int add_to_end(Provider_Report * to_add, Provider_Report * current);
+    int display_reports();
+    int summary_report(int &total_providers, int &total_services, float &total_fees);
 
 private:
     Provider_Report * report;
@@ -114,8 +137,10 @@ public:
 		
 		next = nullptr;
 	}
+	float get_fee() {return this->fee;}
 
-//Functions involving the provider report will go below
+	Provider_Report *& go_next();
+	int display();
 	
 private:
 	Provider_Report * next;
