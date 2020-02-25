@@ -5,7 +5,36 @@ using namespace std;
 //  code planning for IO 
 int main()
 {
-	cout<<"welcome to the program"<<endl;
+	int response;
+	do 
+	{
+		cout<<endl<<"Welcome to the ChocAn system"<<endl<<endl;
+		cout<<"Please enter 0 if you are logging on as a manager or 1 if you are logging on as a provider."<<endl;
+		cin>>response;
+
+
+		if (response == 0)
+		{
+			// managers body 
+		}
+
+		else if (response ==1)
+		{
+			//provider body
+
+
+		}
+		else
+		{
+			cout<<"invalid response, please try again"<<endl;
+		}
+	} while (response != 0 && response != 1);
+
+	return 0;
+}
+
+
+/*
 	
 	Provider * provider_object= new Provider(123456,"billy");
 
@@ -27,12 +56,10 @@ int main()
 	hash_table.display1();
 	cout<<endl;
 	
-
+*/
 	
 
 
-	return 0;
-}
 
 /*
 cout would you like to log in as a provider or manager
