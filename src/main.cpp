@@ -8,6 +8,7 @@ int main()
 	int response;
 	Provider * provider_user;
 	int provider_ID;
+	int manager_ID;
 	
 	//load database's profiles up with all preexisting users
 	PeopleTable database;
@@ -24,22 +25,158 @@ int main()
 		if (response == 0)
 		{
 			// managers body 
+			int manager_action = 0;
+			int manager_sub_action = 0;
+			int manager_repeat = 0;
+				
+			cout<<endl<<"Please input your manager ID number: "<<endl;
+			cin>>manager_ID;
+
+			/*
+			 verify manager ID
+			 */
+
+			do
+			{
+				do
+				{	
+					cout<<"Please select what you would like to do from the Menu"<<endl<<endl;
+					cout<<"-Modify member account (enter 1)"<<endl;
+					cout<<"-Modify provider account (enter 2)"<<endl;
+					cin>>manager_action;
+					
+					if (manager_action == 1)
+					{
+						do
+						{
+							cout<<"Please select what you would like to do with the memebers accounts"<<endl;
+							cout<<"-Add a new member account (enter 1)"<<endl;
+							cout<<"-Delete a current member (enter 2)"<<endl;
+							cout<<"-Modify a current members information (enter 3)"<<endl;
+
+							cin>>manager_sub_action;
+
+							if(manager_sub_action == 1)
+							{
+							//add new member
+							}
+							else if(manager_sub_action == 2)
+							{
+							//delete current member
+							}
+							else if (manager_sub_action == 3)
+							{
+							//modify current members info
+							}
+							else
+							{
+								cout<<"Invalid request, please try again"<<endl<<endl;
+							}
+						}while (manager_sub_action < 1 || manager_sub_action > 3);
+
+					}
+					else if (manager_action == 2)
+					{
+						do
+						{
+							cout<<"Please select what you would like to do with the memebers accounts"<<endl;
+							cout<<"-Add a new Provider account (enter 1)"<<endl;
+							cout<<"-Delete a current Provider (enter 2)"<<endl;
+							cout<<"-Modify a current Providers information (enter 3)"<<endl;
+							
+							cin>>manager_sub_action;
+
+							if(manager_sub_action == 1)
+							{
+							//add new provider
+							}
+							else if(manager_sub_action == 2)
+							{
+							//delete current provider
+							}
+							else if (manager_sub_action == 3)
+							{
+							//modify current providers info
+							}
+							else
+							{
+								cout<<"Invalid request, please try again"<<endl<<endl;
+							}
+						}while (manager_sub_action < 1 || manager_sub_action > 3);
+
+
+		
+					}
+					else
+					{
+						cout<<"Invalid action, please try again"<<endl<<endl;
+					}
+
+				} while ( (manager_action <1)||(manager_action > 4)  );
+
+				cout<<endl<<endl<<"Would you like to peform another action?"<<endl;
+				cout<<" Enter '0' for no and '1' for yes"<<endl;
+				cin>>manager_repeat;
+
+			}while (manager_repeat == 1);
+
+
 		}
 
 		else if (response ==1)
 		{
 			//provider body
 
+			int provider_action = 0;
+			int provider_repeat = 0;
+			
 			cout<<endl<<"Please input your provider ID number: "<<endl;
 			cin>>provider_ID;
+			/*
+			check if input ID matches
+			 */	
+
+			do
+			{
+				do
+				{	
+					cout<<"Please select what you would like to do from the Menu"<<endl<<endl;
+					cout<<"-Provider Directory (enter 1)"<<endl;
+					cout<<"-Bill Choc An (enter 2)"<<endl;
+					cin>>provider_action;
+
+
+					if (provider_action == 1)
+					{
+						//display provider directory
+					}
+					else if (provider_action == 2)
+					{
+						//Bill Choc An
+					}
+					else
+					{
+						cout<<"Invalid action, please try again"<<endl<<endl;
+					}
+
+
+				} while ( (provider_action <1)||(provider_action > 4)  );
+				
+				cout<<endl<<endl<<"Would you like to peform another action?"<<endl;
+				cout<<" Enter '0' for no and '1' for yes"<<endl;
+				cin>>provider_repeat;
+
+			}while (provider_repeat == 1);
 
 
 
 		}
+
 		else
 		{
-			cout<<"invalid response, please try again"<<endl;
+			cout<<"Invalid response, please try again"<<endl;
 		}
+
 	} while (response != 0 && response != 1);
 
 	return 0;
