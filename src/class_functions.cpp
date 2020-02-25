@@ -251,7 +251,6 @@ int Person::summary_report_check(int &total_providers, int &total_services, floa
 
 	return check; //Will return 0 if there are no reports for Provider
 }
-
 //------------------------ Provider and Provider Report Functions ---------------------------
 
 Provider_Report *& Provider_Report::go_next(){
