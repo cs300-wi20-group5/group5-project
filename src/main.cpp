@@ -6,6 +6,31 @@ using namespace std;
 int main()
 {
 	cout<<"welcome to the program"<<endl;
+	
+	Provider * provider_object= new Provider(123456,"billy");
+
+	cout<<provider_object->Provider::get_id()<<endl;
+
+	PeopleTable hash_table;
+
+//	hash_table.files_read();
+
+	
+	int new_id = hash_table.hash_function(provider_object->Provider::get_id());
+
+	cout<<new_id<<endl;
+
+
+	Node * entry = new Node(provider_object);
+
+	cout<<hash_table.add_node(entry,new_id)<<endl;
+	hash_table.display1();
+	cout<<endl;
+	
+
+	
+
+
 	return 0;
 }
 
