@@ -6,6 +6,14 @@ using namespace std;
 int main()
 {
 	int response;
+	Provider * provider_user;
+	int provider_ID;
+	
+	//load database's profiles up with all preexisting users
+	PeopleTable database;
+	database.files_read();
+
+	//perform the IO based on manager vs provider
 	do 
 	{
 		cout<<endl<<"Welcome to the ChocAn system"<<endl<<endl;
@@ -21,6 +29,10 @@ int main()
 		else if (response ==1)
 		{
 			//provider body
+
+			cout<<endl<<"Please input your provider ID number: "<<endl;
+			cin>>provider_ID;
+
 
 
 		}
