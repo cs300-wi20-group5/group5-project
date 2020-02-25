@@ -11,7 +11,7 @@ int main()
 	
 	//load database's profiles up with all preexisting users
 	PeopleTable database;
-	database.files_read();
+	//database.files_read();
 
 	//perform the IO based on manager vs provider
 	do 
