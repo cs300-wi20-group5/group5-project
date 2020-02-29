@@ -7,6 +7,9 @@ int main()
 {
 	int response;
 	Provider * provider_user;
+	PeopleTable data_base;
+	data_base.files_read();
+
 	int provider_ID;
 	int manager_ID;
 	
@@ -153,6 +156,41 @@ int main()
 					else if (provider_action == 2)
 					{
 						//Bill Choc An
+						string date;
+						string time;
+						string member_name;
+						int member_ID;
+						int service_code;
+						float service_fee;
+
+
+						cout<<"Please enter the members ID number:"<<endl;
+						/*
+						 verifies it is correct 
+						 display if suspended or whatever else 
+						
+						 display directory
+						 checks input and such and outputs and such
+						 */
+						cout<<"Please enter the current date in the format of 'MM-DD-YYYY'"<<endl;
+						cin>>date;
+
+						cout<<"Please enter the current time as 'HH:MM'"<<endl;
+						cin>>time;
+
+						cout<<"Please enter the member's name"<<endl;
+						cin>>member_name;
+
+						cout<<"Please enter the member's ID number: "<<endl;
+						cin>>member_ID;
+
+						cout<<"Please once again enter the service code"<<endl;
+						cin>>service_code;
+
+						cout<<"Please enter the service fee for the service"<<endl;
+						cin>>service_fee;
+						 
+						
 					}
 					else
 					{
