@@ -2,7 +2,7 @@
 
 int main() {
     PeopleTable test;
-    test.files_read();
+
 
     //Below I am testing if adding provider reports works
 
@@ -41,21 +41,36 @@ int main() {
     
     test.summary_report();
 
+<<<<<<< HEAD
     test.test_p_write();
 
+=======
+    test.files_read("../data/members.txt", 1);
+    test.files_read("../data/providers.txt", 2);
+    test.display1();
+    test.files_write("../data/test_members.txt");
+>>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
     return 0;
 }
 
 //--------------------- People Table Functions ---------------------------
 
+<<<<<<< HEAD
 int PeopleTable::files_read() {
     ifstream file1("../data/members.txt");
+=======
+int PeopleTable::files_read(string fileName, int dataType) {
+
+    ifstream file1(fileName);
+>>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
     string str;
 
     while (getline(file1, str, ',') )
     {
+	Person * p = nullptr;
         int id = stoi(str);
         if(getline(file1, str, '\n')) {
+<<<<<<< HEAD
             Person * p = new Member(id, str);
             int bucket = this -> hash_function(id);
             Node * temp = new Node(p);
@@ -65,12 +80,14 @@ int PeopleTable::files_read() {
             break;
     } 
     ifstream file2("../data/providers.txt");
+=======
+>>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
 
-    while (getline(file2, str, ',') )
-    {
-        int id = stoi(str);
-        if(getline(file2, str, '\n')) {
-            Person * p = new Provider(id, str);
+	    if(dataType == 1)
+		p = new Member(id, str);
+	    if(dataType == 2)
+		p = new Provider(id, str);
+
             int bucket = this -> hash_function(id);
             Node * temp = new Node(p);
             add_node(temp, bucket);
@@ -78,10 +95,11 @@ int PeopleTable::files_read() {
         else
             break;
     }
-    display1();
+
     return 0;
 }
 
+<<<<<<< HEAD
 //Thomas call this function in a for-loop that traverses the entire hashtable
 //Once a pointer is pointed to a node, call this function to get back data by reference
 int PeopleTable::write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
@@ -136,6 +154,29 @@ int PeopleTable::test_p_write() {
 	}
 }
 
+=======
+int PeopleTable::files_write(string fileName) {
+    
+    ofstream file1(fileName);
+    for(int i = 0; i < 23; ++i) {
+	if(this->table[i]) {
+	    Node * tmp = this->table[i];
+	    while(tmp) {
+		file1 << tmp->data->get_id();
+		file1 << ",";
+		file1 << tmp->data->get_name();
+		file1 << endl;	
+
+		tmp = tmp->next;
+	    }
+	}
+
+    } 
+
+    file1.close(); 
+}
+    
+>>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
 int PeopleTable::hash_function(int id) {
     return id % 23;
 }
