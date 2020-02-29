@@ -39,4 +39,19 @@ git commit -m "your commit comment here"
 ```bash
 git push origin <branch-name>
 ```
-  
+### How to build on the linux terminal
+start by making a directory named build for all the build files
+```bash
+mkdir build && cd build
+```
+Then run cmake for the directory above; it will place all of the build files inside the current directory
+
+```bash
+cmake ..
+```
+Once it's done, you can then run make
+
+```bash
+make
+```
+If the build is successful, it will then make an executable named "cs300-wi20" which you can then run  
