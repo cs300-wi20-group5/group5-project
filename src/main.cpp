@@ -159,10 +159,13 @@ int main()
 						string date;
 						string time;
 						string member_name;
-						int member_ID;
+						int member_IDD;
 						int service_code;
 						float service_fee;
+						int provider_IDD;
 
+						cout<<"Please enter your provider ID number again"<<endl;
+						cin>>provider_IDD;
 
 						cout<<"Please enter the members ID number:"<<endl;
 						/*
@@ -182,13 +185,15 @@ int main()
 						cin>>member_name;
 
 						cout<<"Please enter the member's ID number: "<<endl;
-						cin>>member_ID;
+						cin>>member_IDD;
 
 						cout<<"Please once again enter the service code"<<endl;
 						cin>>service_code;
 
 						cout<<"Please enter the service fee for the service"<<endl;
 						cin>>service_fee;
+						
+						data_base.add_provider_report(provider_IDD,date,time,member_name,member_IDD,service_code,service_fee);
 						 
 						
 					}
