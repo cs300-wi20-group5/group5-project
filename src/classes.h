@@ -25,10 +25,13 @@ public:
     int display1();
     int display2(Node * current);
     int find_hash(int code, Node *& current);
+    int display_personal_report(int code, int choice);
 
     //Functions regarding provider report below
     int add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee);
     int display_reports(int provider_code); 
+    int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
+    int test_p_write(); //Test function for write_p_report
 
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
@@ -63,8 +66,10 @@ public:
 
     //Functions below are wrapper functions to convert Person* to Provider*
     int add_provider_type(Provider_Report * to_add);
-    int display__provider_type();
+    int display_provider_type();
+    int display_personal_type(int choice);
     int summary_report_check(int &total_providers, int &total_services, float &total_fees);
+    int write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 
 
 protected:
@@ -90,13 +95,12 @@ public:
 	    report = nullptr;
     }
 
-    //int files_read();
-    //int files_write();
+    //need a function that will return info to be saved
     int add_report(Provider_Report * to_add);
     int add_to_end(Provider_Report * to_add, Provider_Report * current);
     int display_reports();
     int summary_report(int &total_providers, int &total_services, float &total_fees);
-
+    int write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 private:
     Provider_Report * report;
 
@@ -137,6 +141,13 @@ public:
 		
 		next = nullptr;
 	}
+	
+	//Below are used for getter functions
+	string get_date() {return this->date_of_service;}
+	string get_time() {return this->time;}
+	string get_name() {return this->member_name;}
+	int get_mem_code() {return this->member_code;}
+	int get_serv_code() {return this->service_code;}
 	float get_fee() {return this->fee;}
 
 	Provider_Report *& go_next();
