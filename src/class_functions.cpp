@@ -1,8 +1,8 @@
 #include "classes.h"
 
+/*
 int main() {
     PeopleTable test;
-
 
     //Below I am testing if adding provider reports works
 
@@ -41,28 +41,19 @@ int main() {
     
     test.summary_report();
 
-<<<<<<< HEAD
-    test.test_p_write();
-
-=======
     test.files_read("../data/members.txt", 1);
     test.files_read("../data/providers.txt", 2);
     test.display1();
     test.files_write("../data/test_members.txt");
->>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
     return 0;
 }
 
+*/
 //--------------------- People Table Functions ---------------------------
 
-<<<<<<< HEAD
-int PeopleTable::files_read() {
-    ifstream file1("../data/members.txt");
-=======
 int PeopleTable::files_read(string fileName, int dataType) {
 
     ifstream file1(fileName);
->>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
     string str;
 
     while (getline(file1, str, ',') )
@@ -70,18 +61,7 @@ int PeopleTable::files_read(string fileName, int dataType) {
 	Person * p = nullptr;
         int id = stoi(str);
         if(getline(file1, str, '\n')) {
-<<<<<<< HEAD
             Person * p = new Member(id, str);
-            int bucket = this -> hash_function(id);
-            Node * temp = new Node(p);
-            add_node(temp, bucket);
-        }
-        else
-            break;
-    } 
-    ifstream file2("../data/providers.txt");
-=======
->>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
 
 	    if(dataType == 1)
 		p = new Member(id, str);
@@ -99,7 +79,6 @@ int PeopleTable::files_read(string fileName, int dataType) {
     return 0;
 }
 
-<<<<<<< HEAD
 //Thomas call this function in a for-loop that traverses the entire hashtable
 //Once a pointer is pointed to a node, call this function to get back data by reference
 int PeopleTable::write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
@@ -154,7 +133,6 @@ int PeopleTable::test_p_write() {
 	}
 }
 
-=======
 int PeopleTable::files_write(string fileName) {
     
     ofstream file1(fileName);
@@ -176,7 +154,6 @@ int PeopleTable::files_write(string fileName) {
     file1.close(); 
 }
     
->>>>>>> dbfd5ae78cb321c05afdfeee293eb01cca689e7e
 int PeopleTable::hash_function(int id) {
     return id % 23;
 }

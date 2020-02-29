@@ -8,14 +8,16 @@ int main()
 	int response;
 	Provider * provider_user;
 	PeopleTable data_base;
-	data_base.files_read();
 
 	int provider_ID;
 	int manager_ID;
 	
 	//load database's profiles up with all preexisting users
 	PeopleTable database;
-	//database.files_read();
+
+    	database.files_read("../data/members.txt", 1);
+    	database.files_read("../data/providers.txt", 2);
+    	database.display1();
 
 	//perform the IO based on manager vs provider
 	do 
