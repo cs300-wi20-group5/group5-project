@@ -3,7 +3,7 @@
 int main() {
     PeopleTable test;
 
-
+    /*    
     //Below I am testing if adding provider reports works
 
     int provider_code = 385773619;	//This should be saved from when the provider logged in
@@ -40,11 +40,17 @@ int main() {
     test.display_reports(309123411);
     
     test.summary_report();
+    */
+    
 
     test.files_read("../data/members.txt", 1);
     test.files_read("../data/providers.txt", 2);
     test.display1();
     test.files_write("../data/test_members.txt");
+
+    test.files_read("../data/reports_test.txt", 3);
+    test.display_reports(385773619);
+
     return 0;
 }
 
@@ -57,21 +63,62 @@ int PeopleTable::files_read(string fileName, int dataType) {
 
     while (getline(file1, str, ',') )
     {
-	Person * p = nullptr;
         int id = stoi(str);
-        if(getline(file1, str, '\n')) {
+	if(dataType == 1 || dataType == 2)
+	{
+	    Person * p = nullptr;
+	    if(getline(file1, str, '\n')) {
 
-	    if(dataType == 1)
-		p = new Member(id, str);
-	    if(dataType == 2)
-		p = new Provider(id, str);
+	 	    if(dataType == 1)
+			p = new Member(id, str);
+		    if(dataType == 2)
+			p = new Provider(id, str);
 
-            int bucket = this -> hash_function(id);
-            Node * temp = new Node(p);
-            add_node(temp, bucket);
-        }
-        else
-            break;
+		    int bucket = this -> hash_function(id);
+		    Node * temp = new Node(p);
+		    add_node(temp, bucket);
+	    }
+
+	}
+	if(dataType == 3)
+	{
+	    int add_member_code, add_service_code;
+	    string add_time, add_date, add_name, temp;
+	    float add_fee;
+	    
+	    // cout << id << endl;
+
+	    getline(file1, add_date, ',');
+	    // cout << add_date << endl;
+
+	    getline(file1, add_time, ',');
+	    // cout << add_time << endl;
+
+	    getline(file1, add_name, ',');
+	    // cout << add_name << endl;
+
+	    getline(file1, temp, ',');
+	    add_member_code = stoi(temp);
+	    // cout << add_member_code << endl;
+
+	    getline(file1, temp, ',');
+	    add_service_code = stoi(temp);
+	    // cout << add_service_code << endl;
+	    
+	    /* not including delimiter here since its the last value, 
+	     * and with the delimiter it causes an error with stof */
+	    getline(file1, temp);
+	    add_fee = stof(temp);
+	    // cout << add_fee << endl; 
+	     
+	    // int returnVal = 
+	    add_provider_report(id, add_date, add_time, add_name, add_member_code, add_service_code, add_fee);
+
+	    // cout << "returnVal: " << returnVal << endl;
+	    
+	    // display_reports(id);
+
+	}
     }
 
     return 0;
@@ -92,7 +139,6 @@ int PeopleTable::files_write(string fileName) {
 		tmp = tmp->next;
 	    }
 	}
-
     } 
 
     file1.close(); 
