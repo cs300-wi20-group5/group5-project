@@ -1,9 +1,9 @@
 #include "classes.h"
 
+/*
 int main() {
     PeopleTable test;
 
-    /*    
     //Below I am testing if adding provider reports works
 
     int provider_code = 385773619;	//This should be saved from when the provider logged in
@@ -40,7 +40,7 @@ int main() {
     test.display_reports(309123411);
     
     test.summary_report();
-    */
+
     
 
     test.files_read("../data/members.txt", 1);
@@ -54,6 +54,7 @@ int main() {
     return 0;
 }
 
+*/
 //--------------------- People Table Functions ---------------------------
 
 int PeopleTable::files_read(string fileName, int dataType) {
@@ -64,6 +65,7 @@ int PeopleTable::files_read(string fileName, int dataType) {
     while (getline(file1, str, ',') )
     {
         int id = stoi(str);
+
 	if(dataType == 1 || dataType == 2)
 	{
 	    Person * p = nullptr;
@@ -119,9 +121,65 @@ int PeopleTable::files_read(string fileName, int dataType) {
 	    // display_reports(id);
 
 	}
+        else
+            break;
     }
 
     return 0;
+}
+
+//Thomas call this function in a for-loop that traverses the entire hashtable
+//Once a pointer is pointed to a node, call this function to get back data by reference
+int PeopleTable::write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
+
+	if(!current)
+		return 0;
+
+	//All 9-digit provider codes start with 3, isolating those codes
+	int id = current -> data -> get_id();
+	id = id%300000000;
+
+	if(id < 200000000) {
+		int check = current -> data -> write_p_report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
+
+		return check;
+	}
+
+	return 0;
+	
+}
+
+int PeopleTable::test_p_write() {
+
+	string adate;
+	string atime;
+	string aname;
+	int amemcode;
+	int aservcode;
+	float afee;
+
+	Node * current;
+	for(int i = 0; i < 23; ++i) {
+
+	current = table[i];	
+
+	while(current) {
+	int check = write_p_report(current, adate, atime, aname, amemcode, aservcode, afee);
+
+	if(check == 1) {
+	cout << "--------TESTING PROVIDE WRITE BACK FUNCTION---------" << endl;
+	cout << "Date of Service: " << adate << endl;
+	cout << "Time: " << atime << endl;
+	cout << "Member Name: " << aname << endl;
+	cout << "Member Code: " << amemcode << endl;
+	cout << "Service Code: " << aservcode << endl;
+	cout << "Service Fee: $" << afee << endl;
+	cout << endl;
+
+	}
+		current = current -> next;
+	}
+	}
 }
 
 int PeopleTable::files_write(string fileName) {
@@ -228,6 +286,17 @@ int PeopleTable::add_provider_report(int provider_code, string add_date, string 
 	return 1;
 
 }
+int PeopleTable::display_personal_report(int code, int choice) {
+
+	int flag = 0;
+	Node * current;
+
+	flag = find_hash(code, current);
+	if(flag == 0)
+		return 0;
+
+	current -> data -> display_personal_type(choice);
+}
 
 int PeopleTable::display_reports(int provider_code) {
 
@@ -239,7 +308,7 @@ int PeopleTable::display_reports(int provider_code) {
 		return 0;	//returns 0, code is not found within the system
 
 	//Call function that uses RTTI to convert Person* into Provider*
-	current -> data -> display__provider_type();
+	current -> data -> display_provider_type();
 
 	return 1;
 
@@ -295,7 +364,28 @@ int Person::add_provider_type(Provider_Report * to_add)
 
 }
 
-int Person::display__provider_type() {
+int Person::write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
+
+	Provider * ptr = dynamic_cast<Provider*>(this);
+	ptr -> write_report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
+
+}
+int Person::display_personal_type(int choice) {
+
+	int check;	
+	if(choice == 1) {
+		Provider * ptr = dynamic_cast<Provider*>(this);
+		check = ptr -> display_reports();
+	}
+	/*
+	else {
+		Member * ptr = dynamic_cast<Member*>(this);
+		check = ptr -> display_reports();
+	}
+*/
+	return check;
+}
+int Person::display_provider_type() {
 
 	cout << "---------------WEEKLY REPORT--------------" << endl;
 	cout << "Provider: " << this->get_name() << endl;
@@ -337,6 +427,22 @@ int Provider::add_to_end(Provider_Report * to_add, Provider_Report * current){
 		current -> go_next() = to_add;
 	else
 		add_to_end(to_add, current -> go_next());
+	return 0;
+}
+
+int Provider::write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
+
+	if(this -> report) {
+	add_date = this -> report -> get_date();
+	add_time = this -> report -> get_time();
+	add_name = this -> report -> get_name();
+	add_member_code = this -> report -> get_mem_code();
+	add_service_code = this -> report -> get_serv_code();
+	add_fee = this -> report -> get_fee();
+
+	return 1;
+	}
+	
 	return 0;
 }
 
