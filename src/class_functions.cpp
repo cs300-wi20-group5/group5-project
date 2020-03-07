@@ -1,9 +1,9 @@
 #include "classes.h"
 
-/*
 int main() {
     PeopleTable test;
 
+/*
     //Below I am testing if adding provider reports works
 
     int provider_code = 385773619;	//This should be saved from when the provider logged in
@@ -40,92 +40,154 @@ int main() {
     test.display_reports(309123411);
     
     test.summary_report();
-
+*/
     
 
     test.files_read("../data/members.txt", 1);
     test.files_read("../data/providers.txt", 2);
     test.display1();
-    test.files_write("../data/test_members.txt");
+    test.files_write("../data/test_members.txt", 1);
+    test.files_write("../data/test_providers.txt", 2);
 
     test.files_read("../data/reports_test.txt", 3);
     test.display_reports(385773619);
+    test.display_reports(309123411);
+	
+    test.files_write("../data/reports_test_test.txt", 3);
 
     return 0;
 }
 
-*/
 //--------------------- People Table Functions ---------------------------
 
 int PeopleTable::files_read(string fileName, int dataType) {
-
-    ifstream file1(fileName);
-    string str;
-
-    while (getline(file1, str, ',') )
-    {
-        int id = stoi(str);
-
 	if(dataType == 1 || dataType == 2)
 	{
-	    Person * p = nullptr;
-	    if(getline(file1, str, '\n')) {
-
-	 	    if(dataType == 1)
-			p = new Member(id, str);
-		    if(dataType == 2)
-			p = new Provider(id, str);
-
-		    int bucket = this -> hash_function(id);
-		    Node * temp = new Node(p);
-		    add_node(temp, bucket);
-	    }
-
+		files_read_MP(fileName, dataType);
 	}
+	
 	if(dataType == 3)
 	{
-	    int add_member_code, add_service_code;
-	    string add_time, add_date, add_name, temp;
-	    float add_fee;
-	    
-	    // cout << id << endl;
+		files_read_PR(fileName);
+	} 
 
-	    getline(file1, add_date, ',');
-	    // cout << add_date << endl;
+}
 
-	    getline(file1, add_time, ',');
-	    // cout << add_time << endl;
+void PeopleTable::files_read_MP(string fileName, int dataType) {
+	ifstream file1(fileName);
+	int id;
+	string str;
+	Person * p = nullptr;
 
-	    getline(file1, add_name, ',');
-	    // cout << add_name << endl;
+	while(getline(file1, str, ',')) {	
+		id = stoi(str);
+	    	if(getline(file1, str, '\n')) {
 
-	    getline(file1, temp, ',');
-	    add_member_code = stoi(temp);
-	    // cout << add_member_code << endl;
+			if(dataType == 1)
+				p = new Member(id, str);
+			if(dataType == 2)
+				p = new Provider(id, str);
 
-	    getline(file1, temp, ',');
-	    add_service_code = stoi(temp);
-	    // cout << add_service_code << endl;
-	    
-	    /* not including delimiter here since its the last value, 
-	     * and with the delimiter it causes an error with stof */
-	    getline(file1, temp);
-	    add_fee = stof(temp);
-	    // cout << add_fee << endl; 
-	     
-	    // int returnVal = 
-	    add_provider_report(id, add_date, add_time, add_name, add_member_code, add_service_code, add_fee);
-
-	    // cout << "returnVal: " << returnVal << endl;
-	    
-	    // display_reports(id);
-
+			int bucket = this -> hash_function(id);
+			Node * temp = new Node(p);
+			add_node(temp, bucket);
+	    	}
 	}
-        else
-            break;
-    }
+}
 
-    return 0;
+void PeopleTable::files_read_PR(string fileName) {
+	ifstream file1(fileName);
+    	int add_member_code, add_service_code, id;
+    	string add_time, add_date, add_name, temp, str;
+    	float add_fee;
+   	
+	while(getline(file1, temp, ',') && !file1.eof()) {	
+		id = stoi(temp);	
+
+		cout << "id: " << id << endl;
+
+		getline(file1, add_date, ',');
+
+		getline(file1, add_time, ',');
+
+		getline(file1, add_name, ',');
+
+		getline(file1, temp, ',');
+		add_member_code = stoi(temp);
+
+		getline(file1, temp, ',');
+		add_service_code = stoi(temp);
+	    
+		//  not including delimiter here since its the last value, 
+		//  and with the delimiter it causes an error with stof 
+		getline(file1, temp, '\n');
+		add_fee = stof(temp);
+	     
+		add_provider_report(id, add_date, add_time, add_name, add_member_code, add_service_code, add_fee);
+   	} 
+}
+
+void PeopleTable::files_write(string fileName, int dataType) {
+	if(dataType == 1 || dataType == 2)
+	       	files_write_MP(fileName, dataType);
+	if(dataType == 3)
+		files_write_PR(fileName);
+}
+
+void PeopleTable::files_write_MP(string fileName, int dataType) {
+    ofstream file1(fileName);
+    for(int i = 0; i < 23; ++i) {
+	if(this->table[i]) {
+	    Node * tmp = this->table[i];
+	    while(tmp) {
+		if(tmp->data->get_type() == dataType) {
+			file1 << tmp->data->get_id(); 
+			file1 << ",";
+			file1 << tmp->data->get_name();
+			file1 << endl;	
+		}
+		tmp = tmp->next;
+	    }
+	}
+    } 
+
+    file1.close(); 
+}
+
+void PeopleTable::files_write_PR(string fileName) {
+	Node * tmp;
+	
+	for(int i = 0; i < 23; ++i) {
+		tmp = this->table[i];
+		if(tmp->data->get_type() == 2) {
+			cout << "i: " << i << endl;
+			cout << "test1\n";
+			PRrecursive(fileName, tmp);
+		}	
+	}
+
+	int flag = 0;
+
+	
+	/*
+	flag = find_hash(385773619, tmp);
+	if(flag == 0)
+		return;
+	cout << tmp->data->get_id() << endl;
+	tmp->data->wrapperFW(fileName);
+	*/
+
+}
+
+// Recursive function for getting provider reports
+void PeopleTable::PRrecursive(string fileName, Node * current) {
+	if(!current)
+		return;
+	cout << "test2\n";
+	current->data->wrapperFW(fileName);
+
+	PRrecursive(fileName, current->next);
+
 }
 
 //Thomas call this function in a for-loop that traverses the entire hashtable
@@ -181,26 +243,6 @@ int PeopleTable::test_p_write() {
 	}
 	}
 }
-
-int PeopleTable::files_write(string fileName) {
-    
-    ofstream file1(fileName);
-    for(int i = 0; i < 23; ++i) {
-	if(this->table[i]) {
-	    Node * tmp = this->table[i];
-	    while(tmp) {
-		file1 << tmp->data->get_id();
-		file1 << ",";
-		file1 << tmp->data->get_name();
-		file1 << endl;	
-
-		tmp = tmp->next;
-	    }
-	}
-    } 
-
-    file1.close(); 
-}
     
 int PeopleTable::hash_function(int id) {
     return id % 23;
@@ -226,8 +268,10 @@ int PeopleTable::add_to_end(Node *to_add, Node *current) {
 
 int PeopleTable::display1() {
     for(int i = 0; i < 23; ++i) {
-        cout << "index " << i << ": ";
-        display2(table[i]);
+	if(table[i]) {
+		cout << "index " << i << ": ";
+		display2(table[i]);
+	}
     }
 }
 
@@ -357,6 +401,13 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 //The functions below use dynamic_cast to convert Person* into Provider*
 //This is required in order to get into the scope of the provider to reach Provider data
 
+// Wrapper function for writing data from a provider report to a file
+void Person::wrapperFW(string fileName) {
+	Provider * ptr = dynamic_cast<Provider*>(this);
+	if(ptr)
+		ptr->fileWrite(fileName);
+}
+
 int Person::add_provider_type(Provider_Report * to_add)
 {	
 	Provider * ptr = dynamic_cast<Provider*>(this);
@@ -404,6 +455,7 @@ int Person::summary_report_check(int &total_providers, int &total_services, floa
 
 	return check; //Will return 0 if there are no reports for Provider
 }
+
 //------------------------ Provider and Provider Report Functions ---------------------------
 
 Provider_Report *& Provider_Report::go_next(){
@@ -493,6 +545,33 @@ int Provider::summary_report(int &total_providers, int &total_services, float &t
 
 }
 
+void Provider::fileWrite(string fileName) {
+	ofstream file1(fileName);		
+	
+	cout << "test4\n";
+
+
+	if(!report)
+		return;
+	if(report) {
+		cout << "test4\n";
+		file1 << report->get_date();
+		file1 << ',';
+		file1 << report->get_time();	
+		file1 << ',';
+		file1 << report->get_name();
+		file1 << ',';
+		file1 << report->get_mem_code();	
+		file1 << ',';
+		file1 << report->get_serv_code();
+		file1 << ',';
+		file1 << report->get_fee();
+		file1 << endl;
+	}
+
+	file1.close();
+}
+
 //Display of individual reports for providers
 int Provider_Report::display() {
 
@@ -505,4 +584,3 @@ int Provider_Report::display() {
 	cout << endl;
 
 }
-
