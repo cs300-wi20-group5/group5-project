@@ -3,6 +3,8 @@
 //
 #include <fstream>
 #include <iostream>
+#include <cctype>
+
 using namespace std;
 
 class Node;
@@ -36,7 +38,12 @@ public:
 
 
     int files_read(string fileName, int dataType);
-    int files_write(string fileName);
+    void files_read_MP(string fileName, int dataType);
+    void files_read_PR(string fileName);
+    void files_write(string fileName, int dataType);
+    void files_write_MP(string fileName, int dataType);
+    void files_write_PR(string fileName);    
+
     int hash_function(int id);
     int add_node(Node * to_add, int hash);
     int add_to_end(Node * to_add, Node * current);
@@ -74,12 +81,14 @@ public:
 
 class Person {
 public:
-    Person(int new_id, string new_name) {
+    Person(int new_id, int new_type, string new_name) {
         id = new_id;
+	type = new_type;
         name = new_name;
     }
     virtual ~Person() {}
     int get_id() {return this -> id;}
+    int get_type() {return this->type;}
     string get_name() {return this -> name;}
 
     //Functions below are wrapper functions to convert Person* to Provider*
@@ -89,16 +98,20 @@ public:
     int summary_report_check(int &total_providers, int &total_services, float &total_fees);
     int write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 
+    void wrapperFW(ofstream & file1);
+	
 
 protected:
     int id;
+    int type;
     string name;
 };
 
 class Member: public Person {
 public:
-    Member(int a, string b) : Person(a, b) {
+    Member(int a, string b) : Person(a, 1, b) {
     }
+
 
     //Need function to add member reports
     
@@ -109,7 +122,7 @@ private:
 
 class Provider: public Person {
 public:
-    Provider(int a, string b) : Person(a, b) {
+    Provider(int a, string b) : Person(a, 2, b) {
 	    report = nullptr;
     }
 
@@ -119,6 +132,8 @@ public:
     int display_reports();
     int summary_report(int &total_providers, int &total_services, float &total_fees);
     int write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
+
+    void fileWrite(ofstream & file1);
 private:
     Provider_Report * report;
 
