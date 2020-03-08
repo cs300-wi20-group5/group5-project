@@ -1,9 +1,8 @@
 #include "classes.h"
-
+/*
 int main() {
     PeopleTable test;
 
-/*
     //Below I am testing if adding provider reports works
 
     int provider_code = 385773619;	//This should be saved from when the provider logged in
@@ -40,7 +39,6 @@ int main() {
     test.display_reports(309123411);
     
     test.summary_report();
-*/
     
 
     test.files_read("../data/members.txt", 1);
@@ -57,20 +55,15 @@ int main() {
 
     return 0;
 }
+*/
 
 //--------------------- People Table Functions ---------------------------
 
 int PeopleTable::files_read(string fileName, int dataType) {
 	if(dataType == 1 || dataType == 2)
-	{
 		files_read_MP(fileName, dataType);
-	}
-	
 	if(dataType == 3)
-	{
 		files_read_PR(fileName);
-	} 
-
 }
 
 void PeopleTable::files_read_MP(string fileName, int dataType) {
@@ -103,8 +96,6 @@ void PeopleTable::files_read_PR(string fileName) {
    	
 	while(getline(file1, temp, ',') && !file1.eof()) {	
 		id = stoi(temp);	
-
-		cout << "id: " << id << endl;
 
 		getline(file1, add_date, ',');
 
@@ -154,40 +145,24 @@ void PeopleTable::files_write_MP(string fileName, int dataType) {
     file1.close(); 
 }
 
+
+// Function that loops through hash table to find all reports, when it finds a valid provider, 
+// it goes down into the provider and writes all reports to file
 void PeopleTable::files_write_PR(string fileName) {
+	ofstream file1(fileName);
 	Node * tmp;
 	
 	for(int i = 0; i < 23; ++i) {
 		tmp = this->table[i];
-		if(tmp->data->get_type() == 2) {
-			cout << "i: " << i << endl;
-			cout << "test1\n";
-			PRrecursive(fileName, tmp);
-		}	
+		if(this->table[i]) {	
+			while(tmp) {	
+				if(tmp->data->get_type() == 2)
+					tmp->data->wrapperFW(file1);
+				tmp = tmp->next;
+			}	
+		}
 	}
-
-	int flag = 0;
-
-	
-	/*
-	flag = find_hash(385773619, tmp);
-	if(flag == 0)
-		return;
-	cout << tmp->data->get_id() << endl;
-	tmp->data->wrapperFW(fileName);
-	*/
-
-}
-
-// Recursive function for getting provider reports
-void PeopleTable::PRrecursive(string fileName, Node * current) {
-	if(!current)
-		return;
-	cout << "test2\n";
-	current->data->wrapperFW(fileName);
-
-	PRrecursive(fileName, current->next);
-
+	file1.close();
 }
 
 //Thomas call this function in a for-loop that traverses the entire hashtable
@@ -223,24 +198,24 @@ int PeopleTable::test_p_write() {
 	Node * current;
 	for(int i = 0; i < 23; ++i) {
 
-	current = table[i];	
+		current = table[i];	
 
-	while(current) {
-	int check = write_p_report(current, adate, atime, aname, amemcode, aservcode, afee);
+		while(current) {
+		int check = write_p_report(current, adate, atime, aname, amemcode, aservcode, afee);
 
-	if(check == 1) {
-	cout << "--------TESTING PROVIDE WRITE BACK FUNCTION---------" << endl;
-	cout << "Date of Service: " << adate << endl;
-	cout << "Time: " << atime << endl;
-	cout << "Member Name: " << aname << endl;
-	cout << "Member Code: " << amemcode << endl;
-	cout << "Service Code: " << aservcode << endl;
-	cout << "Service Fee: $" << afee << endl;
-	cout << endl;
+			if(check == 1) {
+				cout << "--------TESTING PROVIDE WRITE BACK FUNCTION---------" << endl;
+				cout << "Date of Service: " << adate << endl;
+				cout << "Time: " << atime << endl;
+				cout << "Member Name: " << aname << endl;
+				cout << "Member Code: " << amemcode << endl;
+				cout << "Service Code: " << aservcode << endl;
+				cout << "Service Fee: $" << afee << endl;
+				cout << endl;
 
-	}
-		current = current -> next;
-	}
+			}
+			current = current -> next;
+		}
 	}
 }
     
@@ -323,7 +298,7 @@ int PeopleTable::add_provider_report(int provider_code, string add_date, string 
 
 	//Calling provider report constructor to make the report
 	Provider_Report * p = new Provider_Report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
-
+	
 	//Calling function from Person Class
 	current -> data -> add_provider_type(p);
 
@@ -402,10 +377,10 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 //This is required in order to get into the scope of the provider to reach Provider data
 
 // Wrapper function for writing data from a provider report to a file
-void Person::wrapperFW(string fileName) {
+void Person::wrapperFW(ofstream & file1) {
 	Provider * ptr = dynamic_cast<Provider*>(this);
 	if(ptr)
-		ptr->fileWrite(fileName);
+		ptr->fileWrite(file1);
 }
 
 int Person::add_provider_type(Provider_Report * to_add)
@@ -485,14 +460,14 @@ int Provider::add_to_end(Provider_Report * to_add, Provider_Report * current){
 int Provider::write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
 
 	if(this -> report) {
-	add_date = this -> report -> get_date();
-	add_time = this -> report -> get_time();
-	add_name = this -> report -> get_name();
-	add_member_code = this -> report -> get_mem_code();
-	add_service_code = this -> report -> get_serv_code();
-	add_fee = this -> report -> get_fee();
+		add_date = this -> report -> get_date();
+		add_time = this -> report -> get_time();
+		add_name = this -> report -> get_name();
+		add_member_code = this -> report -> get_mem_code();
+		add_service_code = this -> report -> get_serv_code();
+		add_fee = this -> report -> get_fee();
 
-	return 1;
+		return 1;
 	}
 	
 	return 0;
@@ -545,31 +520,33 @@ int Provider::summary_report(int &total_providers, int &total_services, float &t
 
 }
 
-void Provider::fileWrite(string fileName) {
-	ofstream file1(fileName);		
-	
-	cout << "test4\n";
+// Function that takes the stored reports and writes them to file, 
+// has a loop to go through all reports since they're stored in a LLL
+void Provider::fileWrite(ofstream & file1) {	
+	Provider_Report * temp = report;	
 
-
-	if(!report)
-		return;
-	if(report) {
-		cout << "test4\n";
-		file1 << report->get_date();
-		file1 << ',';
-		file1 << report->get_time();	
-		file1 << ',';
-		file1 << report->get_name();
-		file1 << ',';
-		file1 << report->get_mem_code();	
-		file1 << ',';
-		file1 << report->get_serv_code();
-		file1 << ',';
-		file1 << report->get_fee();
-		file1 << endl;
+	while(temp) {
+		if(!temp)
+			return;
+		if(temp) {
+			file1 << this->get_id();
+			file1 << ',';
+			file1 << temp->get_date();
+			file1 << ',';
+			file1 << temp->get_time();	
+			file1 << ',';
+			file1 << temp->get_name();
+			file1 << ',';
+			file1 << temp->get_mem_code();	
+			file1 << ',';
+			file1 << temp->get_serv_code();
+			file1 << ',';
+			file1 << temp->get_fee();
+			file1 << endl;
+		}
+		temp = temp->go_next();	
 	}
 
-	file1.close();
 }
 
 //Display of individual reports for providers

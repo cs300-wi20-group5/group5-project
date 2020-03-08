@@ -3,6 +3,8 @@
 //
 #include <fstream>
 #include <iostream>
+#include <cctype>
+
 using namespace std;
 
 class Node;
@@ -41,7 +43,6 @@ public:
     void files_write(string fileName, int dataType);
     void files_write_MP(string fileName, int dataType);
     void files_write_PR(string fileName);    
-    void PRrecursive(string fileName, Node * current);
 
     int hash_function(int id);
     int add_node(Node * to_add, int hash);
@@ -97,7 +98,7 @@ public:
     int summary_report_check(int &total_providers, int &total_services, float &total_fees);
     int write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 
-    void wrapperFW(string fileName);
+    void wrapperFW(ofstream & file1);
 	
 
 protected:
@@ -132,7 +133,7 @@ public:
     int summary_report(int &total_providers, int &total_services, float &total_fees);
     int write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 
-    void fileWrite(string fileName);
+    void fileWrite(ofstream & file1);
 private:
     Provider_Report * report;
 
@@ -175,7 +176,7 @@ public:
 	}
 	
 	//Below are used for getter functions
-	string get_date() {cout << this->date_of_service << endl; return this->date_of_service;}
+	string get_date() {return this->date_of_service;}
 	string get_time() {return this->time;}
 	string get_name() {return this->member_name;}
 	int get_mem_code() {return this->member_code;}
