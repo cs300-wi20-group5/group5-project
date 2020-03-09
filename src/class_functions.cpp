@@ -1,5 +1,44 @@
 #include "classes.h"
 
+/*
+int main() {
+    PeopleTable test;
+    //Below I am testing if adding provider reports works
+    int provider_code = 385773619;	//This should be saved from when the provider logged in
+    //This information will be gathered when the provider bills ChocAn 
+    //and they are prompted to verify the service they have provided
+    string date = "2/21/2020";
+    string time = "12:10 am";
+    string mem_name = "Michael Tran";
+    int mem_code = 123456789;
+    int serv_code = 123456;
+    float fee = 85.99;
+    test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
+    date = "2/24/2020";
+    time = "12:30 am";
+    mem_name = "Diana Mejia";
+    mem_code = 987654321;
+    serv_code = 654321;
+    fee = 72.50;
+    test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
+    date = "2/22/2020";
+    time = "7:02 pm";
+    mem_name = "Gilbert Ho";
+    mem_code = 927481938;
+    serv_code = 541353;
+    fee = 201.83;
+    test.add_provider_report(309123411,date,time,mem_name,mem_code,serv_code,fee);
+    test.display_reports(provider_code);
+    test.display_reports(309123411);
+    
+    test.summary_report();
+    test.files_read("../data/members.txt", 1);
+    test.files_read("../data/providers.txt", 2);
+    test.display1();
+    test.files_write("../data/test_members.txt");
+    return 0;
+}
+*/
 //--------------------- People Table Functions ---------------------------
 
 int PeopleTable::files_read(string fileName, int dataType) {
@@ -9,63 +48,20 @@ int PeopleTable::files_read(string fileName, int dataType) {
 
     while (getline(file1, str, ',') )
     {
+	Person * p = nullptr;
         int id = stoi(str);
+        if(getline(file1, str, '\n')) {
+            Person * p = new Member(id, str);
 
-	if(dataType == 1 || dataType == 2)
-	{
-	    Person * p = nullptr;
-	    if(getline(file1, str, '\n')) {
+	    if(dataType == 1)
+		p = new Member(id, str);
+	    if(dataType == 2)
+		p = new Provider(id, str);
 
-	 	    if(dataType == 1)
-			p = new Member(id, str);
-		    if(dataType == 2)
-			p = new Provider(id, str);
-
-		    int bucket = this -> hash_function(id);
-		    Node * temp = new Node(p);
-		    add_node(temp, bucket);
-	    }
-
-	}
-	if(dataType == 3)
-	{
-	    int add_member_code, add_service_code;
-	    string add_time, add_date, add_name, temp;
-	    float add_fee;
-	    
-	    // cout << id << endl;
-
-	    getline(file1, add_date, ',');
-	    // cout << add_date << endl;
-
-	    getline(file1, add_time, ',');
-	    // cout << add_time << endl;
-
-	    getline(file1, add_name, ',');
-	    // cout << add_name << endl;
-
-	    getline(file1, temp, ',');
-	    add_member_code = stoi(temp);
-	    // cout << add_member_code << endl;
-
-	    getline(file1, temp, ',');
-	    add_service_code = stoi(temp);
-	    // cout << add_service_code << endl;
-	    
-	    /* not including delimiter here since its the last value, 
-	     * and with the delimiter it causes an error with stof */
-	    getline(file1, temp);
-	    add_fee = stof(temp);
-	    // cout << add_fee << endl; 
-	     
-	    // int returnVal = 
-	    add_provider_report(id, add_date, add_time, add_name, add_member_code, add_service_code, add_fee);
-
-	    // cout << "returnVal: " << returnVal << endl;
-	    
-	    // display_reports(id);
-
-	}
+            int bucket = this -> hash_function(id);
+            Node * temp = new Node(p);
+            add_node(temp, bucket);
+        }
         else
             break;
     }
@@ -92,6 +88,22 @@ int PeopleTable::write_p_report(Node * current, string &add_date, string &add_ti
 
 	return 0;
 	
+}
+
+//For members
+int PeopleTable::write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip) {
+  if(!current)
+		return 0;
+
+	int id = current -> data -> get_id();
+
+	if(id <= 999999999) {
+		int check = current -> data -> write_m_report(current, new_date, new_name, new_service, new_memname, new_memcode, new_street, new_city, new_state, new_zip);
+
+		return check;
+	}
+
+	return 0;
 }
 
 int PeopleTable::test_p_write() {
@@ -142,6 +154,7 @@ int PeopleTable::files_write(string fileName) {
 		tmp = tmp->next;
 	    }
 	}
+
     } 
 
     file1.close(); 
@@ -231,6 +244,21 @@ int PeopleTable::add_provider_report(int provider_code, string add_date, string 
 	return 1;
 
 }
+
+int PeopleTable::add_provider_report()
+{
+    int flag = 0;
+    Node * current;
+
+    flag = find_hash(member_code, current);
+    if(flag == 0)
+      return 0; 
+
+    Member_Report * m = new Member_Report();
+
+    current -> data -> add_member_
+  return 1;
+}
 int PeopleTable::display_personal_report(int code, int choice) {
 
 	int flag = 0;
@@ -298,6 +326,43 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 	return 0;
 
 }
+
+int PeopleTable::add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip) {
+	int flag = 0;
+	Node * current;
+
+	flag = find_hash(member_code, current);
+	if(flag == 0)
+		return 0;	//returns 0, code is not found within the system
+
+	//Calling member report constructor to make the report
+	Member_Report * p = new Member_Report(new_date, new_name, new_service, new_memname, new_memcode, new_street, new_city, new_state, new_zip);
+
+	//Calling function from Person Class
+	current -> data -> add_provider_type(p);
+
+	return 1;
+}
+
+int PeopleTable::display_m_reports(int member_code) {
+  int flag = 0;
+	Node * current;
+
+	flag = find_hash(member_code, current);
+	if(flag == 0)
+		return 0;	//returns 0, code is not found within the system
+
+	//Call function that uses RTTI to convert Person* into Member*
+	current -> data -> display_member_type();
+
+	return 1;
+}
+
+int PeopleTable::write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip) {
+
+}
+
+
 //----------------------------------- Person Functions -------------------------------------
 //The functions below use dynamic_cast to convert Person* into Provider*
 //This is required in order to get into the scope of the provider to reach Provider data
@@ -309,12 +374,36 @@ int Person::add_provider_type(Provider_Report * to_add)
 
 }
 
+int Person::add_member_type(Member_Report * to_add)
+{	
+	Member * ptr = dynamic_cast<Member*>(this);
+	ptr -> add_report(to_add);
+}
+
 int Person::write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
 
 	Provider * ptr = dynamic_cast<Provider*>(this);
 	ptr -> write_report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
 
 }
+
+int Person::write_m_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip) {
+
+  Member * ptr = dynamic_cast<Member*>(this);
+	ptr -> write_report(add_member_name, add_member_code, add_street, add_city, add_state, add_zip)
+}
+
+int Person::display_member_type()
+{
+  cout << "---------------WEEKLY MEMBER REPORT--------------" << endl;
+	cout << "Member: " << this->get_name() << endl;
+	cout << "Member Code: " << this->get_id() << endl;
+	cout << endl;
+
+	Member * ptr = dynamic_cast<Member*>(this);
+	ptr -> display_reports();
+}
+
 int Person::display_personal_type(int choice) {
 
 	int check;	
@@ -322,14 +411,13 @@ int Person::display_personal_type(int choice) {
 		Provider * ptr = dynamic_cast<Provider*>(this);
 		check = ptr -> display_reports();
 	}
-	/*
 	else {
 		Member * ptr = dynamic_cast<Member*>(this);
 		check = ptr -> display_reports();
 	}
-*/
 	return check;
 }
+
 int Person::display_provider_type() {
 
 	cout << "---------------WEEKLY REPORT--------------" << endl;
@@ -450,6 +538,7 @@ int Provider_Report::display() {
 	cout << endl;
 
 }
+ 
 
 //--------------------- Member Functions ---------------------------
 

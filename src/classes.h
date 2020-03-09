@@ -51,15 +51,14 @@ public:
     int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
     int test_p_write(); //Test function for write_p_report
 
-    //Functions regarding member report below
-	int add_member_report();
-	int display_reports();
-	int write_m_report();
-	int test_m_write(); 
+    //Functions regarding provider report below
+    int add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip);
+    int display_m_reports(int member_code);
+    int write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip);
 
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
-
+    
 private:
     Node ** table;
 };
@@ -94,6 +93,11 @@ public:
     int display_personal_type(int choice);
     int summary_report_check(int &total_providers, int &total_services, float &total_fees);
     int write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
+
+    //Functions below are wrapper functions to convert Person* to Provider
+    int add_member_type(Member_Report * to_add);
+    int display_member_type();
+    int write_m_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip);
 
 
 protected:
@@ -184,6 +188,7 @@ private:
 	int zip;
 };
 
+
 class Provider_Report {
 public:
 	Provider_Report(string new_date, string new_time, string new_name, int new_memcode, int new_servcode, float new_fee)
@@ -208,7 +213,6 @@ public:
 
 	Provider_Report *& go_next();
 	int display();
-
 	
 private:
 	Provider_Report * next;
