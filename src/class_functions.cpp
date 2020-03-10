@@ -90,22 +90,6 @@ int PeopleTable::write_p_report(Node * current, string &add_date, string &add_ti
 	
 }
 
-//Write function for members
-int PeopleTable::write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip) {
-  if(!current)
-		return 0;
-
-	int id = current -> data -> get_id();
-
-	if(id < INT_MAX) {
-		int check = current -> data -> write_m_report(current, new_date, new_name, new_service, new_memname, new_memcode, new_street, new_city, new_state, new_zip);
-
-		return check;
-	}
-
-	return 0;
-}
-
 int PeopleTable::test_p_write() {
 
 	string adate;

@@ -54,8 +54,7 @@ public:
     //Functions regarding member report below
     int add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip);
     int display_m_reports(int member_code);
-    int write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip);
-
+    
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
     
