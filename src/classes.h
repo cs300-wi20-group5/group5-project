@@ -97,8 +97,7 @@ public:
     //Functions below are wrapper functions to convert Person* to Member*
     int add_member_type(Member_Report * to_add);
     int display_member_type();
-    int write_m_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip);
-
+    
 
 protected:
     int id;
