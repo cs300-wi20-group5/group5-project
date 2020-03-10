@@ -1,4 +1,3 @@
-//code goes here
 using namespace std;
 #include "classes.h"
 //#include <cstring>
