@@ -1,31 +1,31 @@
 //code goes here
 using namespace std;
 #include "classes.h"
+//#include <cstring>
+#include <string>
 
-//  code planning for IO 
 int main()
 {
 	int response;
 	Provider * provider_user;
+	Member * member_user;
 	PeopleTable data_base;
+
+  	data_base.files_read("../data/members.txt", 1);
+    	data_base.files_read("../data/providers.txt", 2);
+   
+	data_base.display1();	
 
 	int provider_ID;
 	int manager_ID;
 	
-	//load database's profiles up with all preexisting users
-	PeopleTable database;
-
-    	database.files_read("../data/members.txt", 1);
-    	database.files_read("../data/providers.txt", 2);
-    	database.display1();
-
 	//perform the IO based on manager vs provider
 	do 
 	{
 		cout<<endl<<"Welcome to the ChocAn system"<<endl<<endl;
 		cout<<"Please enter 0 if you are logging on as a manager or 1 if you are logging on as a provider."<<endl;
 		cin>>response;
-
+		cin.ignore();
 
 		if (response == 0)
 		{
@@ -36,7 +36,7 @@ int main()
 				
 			cout<<endl<<"Please input your manager ID number: "<<endl;
 			cin>>manager_ID;
-
+			cin.ignore();
 			/*
 			 verify manager ID
 			 */
@@ -48,8 +48,13 @@ int main()
 					cout<<"Please select what you would like to do from the Menu"<<endl<<endl;
 					cout<<"-Modify member account (enter 1)"<<endl;
 					cout<<"-Modify provider account (enter 2)"<<endl;
+					cout<<"-Display a providers report (enter 3)"<<endl;
+					cout<<"-Display a members report (enter 4)"<<endl;
+					cout<<"-Display the summary report (enter 5)"<<endl;
 					cin>>manager_action;
-					
+					cin.ignore();	
+
+
 					if (manager_action == 1)
 					{
 						do
@@ -60,18 +65,147 @@ int main()
 							cout<<"-Modify a current members information (enter 3)"<<endl;
 
 							cin>>manager_sub_action;
+							cin.ignore();
 
 							if(manager_sub_action == 1)
 							{
-							//add new member
+								//add new member
+
+								int new_member_ID;
+								string new_member_name;
+								Node * current;
+
+								cout<<"Please enter the new members name"<<endl;
+								getline(cin,new_member_name);
+
+								do
+								{
+								cout<<"Please enter a new members nonexistent 9 digit ID"<<endl;
+								cin>>new_member_ID;
+								cin.ignore();
+								} while(new_user_id_checker(new_member_ID) == 0 || data_base.find_hash(new_member_ID,current) == 1 );
+
+							
+								member_user= new Member(new_member_ID,new_member_name);
+
+								int hashed_ID=data_base.hash_function(member_user->Member::get_id());
+
+
+								Node * entry = new Node(member_user);
+
+								data_base.add_node(entry,hashed_ID);
+
+								data_base.display1();
+
 							}
 							else if(manager_sub_action == 2)
 							{
-							//delete current member
+
+								//delete current member
+								int member_deleting;
+								Node * current;
+								do
+								{
+									cout<<"Please enter the ID of the member you wish to remove"<<endl;
+									cin>>member_deleting;	
+									cin.ignore();
+								} while (data_base.find_hash(member_deleting,current) == 0);
+
 							}
 							else if (manager_sub_action == 3)
 							{
+
 							//modify current members info
+								int member_ID;
+								Node * current;
+								int mod_choice;
+								string mod_string;
+								do
+								{
+									cout<<"Please enter the ID of the member you wish to modify"<<endl;
+									cin>>member_ID;	
+									cin.ignore();
+								} while (data_base.find_hash(member_ID,current) == 0);
+
+								do
+								{
+									cout<<"Please choose one of the categories below from the member to modify: "<<endl;
+									cout<<endl<<"-Name (enter 1)"<<endl;
+									cout<<"-Street Address (enter 2)"<<endl;
+									cout<<"-City (enter 3)"<<endl;
+									cout<<"-State (enter 4)"<<endl;
+									cin>>mod_choice;
+									cin.ignore();
+
+
+									if (mod_choice ==1)
+									{
+										cout<<"Please enter the new name you'd like to change to"<<endl;
+										getline(cin,mod_string);
+
+										if (name_size_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+
+										else
+										{
+											cout<<"adding new name now"<<endl;
+											data_base.person_modify(mod_string,member_ID,mod_choice);
+											cout<<"Done adding new name"<<endl;
+										}
+									}
+
+
+
+									else if (mod_choice ==2)
+									{
+										cout<<"Please enter the new address you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (street_address_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,member_ID,mod_choice);
+									}
+
+
+									else if (mod_choice ==3)
+									{
+										cout<<"Please enter the new city you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (state_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,member_ID,mod_choice);
+									}
+
+
+
+									else if (mod_choice ==4)
+									{
+										cout<<"Please enter the new state you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (state_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,member_ID,mod_choice); 
+									}
+									else
+										cout<<"Invalid modify option, please try again"<<endl<<endl;
+
+								} while (mod_choice <1 || mod_choice >4);
+							
+							
 							}
 							else
 							{
@@ -80,28 +214,158 @@ int main()
 						}while (manager_sub_action < 1 || manager_sub_action > 3);
 
 					}
+
 					else if (manager_action == 2)
 					{
 						do
 						{
-							cout<<"Please select what you would like to do with the memebers accounts"<<endl;
+							cout<<"Please select what you would like to do with the providers accounts"<<endl;
 							cout<<"-Add a new Provider account (enter 1)"<<endl;
 							cout<<"-Delete a current Provider (enter 2)"<<endl;
 							cout<<"-Modify a current Providers information (enter 3)"<<endl;
 							
 							cin>>manager_sub_action;
+							cin.ignore();
 
 							if(manager_sub_action == 1)
 							{
 							//add new provider
+
+							int new_provider_ID;
+							string new_provider_name;
+							Node * current;
+
+							cout<<"Please enter the new Providers name"<<endl;
+							getline(cin,new_provider_name);
+
+							do
+							{
+								cout<<"Please enter the new providers nonexistent 9 digit ID"<<endl;
+								cin>>new_provider_ID;
+								cin.ignore();
+							}while(new_user_id_checker(new_provider_ID) == 0 || data_base.find_hash(new_provider_ID,current));
+
+
+							
+							provider_user= new Provider(new_provider_ID,new_provider_name);
+
+							int hashed_ID=data_base.hash_function(provider_user->Provider::get_id());
+
+
+							Node * entry = new Node(provider_user);
+
+							data_base.add_node(entry,hashed_ID);
+
+
+
 							}
 							else if(manager_sub_action == 2)
 							{
-							//delete current provider
+								//delete current provider
+								
+								int provider_deleting;	
+								Node*current;
+
+								do
+								{
+									cout<<"Please enter the Provider's ID you wish to delete"<<endl;		
+									cin>>provider_deleting;
+									cin.ignore();
+								} while (data_base.find_hash(provider_deleting,current) == 0);
+
+
+
+
 							}
 							else if (manager_sub_action == 3)
 							{
 							//modify current providers info
+								int provider_ID;	
+								Node*current;
+								int mod_choice;
+								string mod_string;
+	
+
+								do
+								{
+									cout<<"Please enter the ID of the provider you wish to modify"<<endl;		
+									cin>>provider_ID;
+									cin.ignore();
+								} while (data_base.find_hash(provider_ID,current) == 0);
+								do
+								{
+									cout<<"Please choose one of the categories from the provider to modify"<<endl;
+									cout<<endl<<"-Name (enter 1)"<<endl;
+									cout<<"-Street Address (enter 2)"<<endl;
+									cout<<"-City (enter 3)"<<endl;
+									cout<<"-State (enter 4)"<<endl;
+									cin>>mod_choice;
+									cin.ignore();
+
+
+									if (mod_choice ==1)
+									{
+										cout<<"Please enter the new name you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (name_size_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,provider_ID,mod_choice); 
+									}
+
+
+
+									else if (mod_choice ==2)
+									{
+										cout<<"Please enter the new address you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (street_address_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,provider_ID,mod_choice); 
+
+									}
+
+
+									else if (mod_choice ==3)
+									{
+										cout<<"Please enter the new city you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (state_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,provider_ID,mod_choice); 
+									}
+
+
+
+									else if (mod_choice ==4)
+									{
+										cout<<"Please enter the new state you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (state_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,provider_ID,mod_choice); 
+									}
+									else
+										cout<<"Invalid option, please try again"<<endl<<endl;
+
+								} while (mod_choice <1 || mod_choice >4);
+
+
 							}
 							else
 							{
@@ -112,16 +376,68 @@ int main()
 
 		
 					}
+
+					
+					else if (manager_action == 3)
+					{
+
+						int provider_ID;
+						Node * current;
+
+						do
+						{
+							cout<<"Please enter the providers ID number you wish you see reports from"<<endl;
+							cin>>provider_ID;
+							cin.ignore();
+
+						} while (data_base.find_hash(provider_ID,current) == 0);
+
+
+						data_base.display_reports(provider_ID);
+
+					}
+
+
+	
+					else if (manager_action == 4)
+					{
+
+						int member_ID;
+						Node * current;
+
+						do
+						{
+							cout<<"Please enter the members ID number you wish you see reports from"<<endl;
+							cin>>member_ID;
+							cin.ignore();
+
+						} while (data_base.find_hash(provider_ID,current) == 0);
+
+						cout<<"function not made yet "<<endl;
+
+						//data_base.
+						//have a function to show member report
+
+					}
+
+
+					else if (manager_action == 5)
+					{
+						cout<<"display summary report"<<endl;
+						data_base.summary_report();
+					}
+
 					else
 					{
 						cout<<"Invalid action, please try again"<<endl<<endl;
 					}
 
-				} while ( (manager_action <1)||(manager_action > 4)  );
+				} while ( (manager_action <1)||(manager_action > 5)  );
 
 				cout<<endl<<endl<<"Would you like to peform another action?"<<endl;
 				cout<<" Enter '0' for no and '1' for yes"<<endl;
 				cin>>manager_repeat;
+				cin.ignore();
 
 			}while (manager_repeat == 1);
 
@@ -131,15 +447,16 @@ int main()
 		else if (response ==1)
 		{
 			//provider body
-
 			int provider_action = 0;
 			int provider_repeat = 0;
-			
-			cout<<endl<<"Please input your provider ID number: "<<endl;
-			cin>>provider_ID;
-			/*
-			check if input ID matches
-			 */	
+			Node*current;	
+
+			do
+			{
+				cout<<endl<<"Please input your provider ID number: "<<endl;
+				cin>>provider_ID;
+				cin.ignore();
+			} while (data_base.find_hash(provider_ID,current) == 0);
 
 			do
 			{
@@ -148,7 +465,9 @@ int main()
 					cout<<"Please select what you would like to do from the Menu"<<endl<<endl;
 					cout<<"-Provider Directory (enter 1)"<<endl;
 					cout<<"-Bill Choc An (enter 2)"<<endl;
+					cout<<"-Display weekly report (enter 3)"<<endl;
 					cin>>provider_action;
+					cin.ignore();
 
 
 					if (provider_action == 1)
@@ -165,69 +484,92 @@ int main()
 						int service_code;
 						float service_fee;
 						int provider_IDD;
-
+						Node * current;	
+						do
+						{
 						cout<<"Please enter your provider ID number again"<<endl;
 						cin>>provider_IDD;
+						cin.ignore();
+						} while (data_base.find_hash(provider_IDD,current) == 0);
 
-						cout<<"Please enter the members ID number:"<<endl;
+						do
+						{
+							cout<<"Please enter the members ID number:"<<endl;
+							cin>>member_IDD;
+							cin.ignore();
+						} while (data_base.find_hash(member_IDD,current) == 0);
 						/*
-						 verifies it is correct 
-						 display if suspended or whatever else 
-						
 						 display directory
 						 checks input and such and outputs and such
 						 */
-						cout<<"Please enter the current date in the format of 'MM-DD-YYYY'"<<endl;
-						cin>>date;
+						
+						do
+						{	
+							cout<<"Please enter the current date in the format of 'MM-DD-YYYY'"<<endl;
+							cin>>date;
+							cin.ignore();
+						} while (date_checker(date) == 0);
 
-						cout<<"Please enter the current time as 'HH:MM'"<<endl;
-						cin>>time;
+						do
+						{
+							cout<<"Please enter the current time as 'HH:MM'"<<endl;
+							cin>>time;
+							cin.ignore();	
+						} while (time_checker(time) == 0);
+						
+						do
+						{
+							cout<<"Please enter the member's name"<<endl;
+							getline(cin, member_name);
+						} while (name_size_checker (member_name) == 0 || member_name.compare(current -> data -> get_name()));
+						do
+						{
+							cout<<"Please once again enter the service code"<<endl;
+							cin>>service_code;
+							cin.ignore();
+						} while (service_code_checker(service_code) == 0);
 
-						cout<<"Please enter the member's name"<<endl;
-						cin>>member_name;
-
-						cout<<"Please enter the member's ID number: "<<endl;
-						cin>>member_IDD;
-
-						cout<<"Please once again enter the service code"<<endl;
-						cin>>service_code;
-
-						cout<<"Please enter the service fee for the service"<<endl;
-						cin>>service_fee;
+						do
+						{
+							cout<<"Please enter the service fee for the service"<<endl;
+							cin>>service_fee;
+							cin.ignore();
+						} while (service_fee_checker (service_fee) == 0);
 						
 						data_base.add_provider_report(provider_IDD,date,time,member_name,member_IDD,service_code,service_fee);
-						 
-						
 					}
+
+					else if (provider_action == 3)
+					{
+						data_base.display_reports(provider_ID);
+					}
+						
 					else
 					{
 						cout<<"Invalid action, please try again"<<endl<<endl;
 					}
 
 
-				} while ( (provider_action <1)||(provider_action > 4)  );
+				} while ( (provider_action <1)||(provider_action > 3)  );
 				
 				cout<<endl<<endl<<"Would you like to peform another action?"<<endl;
 				cout<<" Enter '0' for no and '1' for yes"<<endl;
 				cin>>provider_repeat;
+				cin.ignore();
 
 			}while (provider_repeat == 1);
-
-
-
 		}
-
 		else
 		{
 			cout<<"Invalid response, please try again"<<endl;
 		}
 
 	} while (response != 0 && response != 1);
+ 
+	data_base.display1();	
 
 	return 0;
 }
-
-
 /*
 	
 	Provider * provider_object= new Provider(123456,"billy");
@@ -250,99 +592,4 @@ int main()
 	hash_table.display1();
 	cout<<endl;
 	
-*/
-	
-
-
-
-/*
-cout would you like to log in as a provider or manager
-cin answer
-
-
-if manager:
-	-
-if provider:
-
-
-loop: 
-	1.) ask to input ID
-		- if invalid 
-			beginning of loop again
-		- elseif correct
-			doctor = new provider(inputted_ID)		
-
-loop:
-	cout: options to choose: 
-		- provider directory  (1)
-		- bill choc An (2)
-		- modify member account (3)
-		-modify provider account (4)
-cin answer ( in numbers)
-
-if (1)
-	display provider directory
-if (2)
-	cout please enter member code
-	cin code in a temp variable
-	loop
-		cout provider directory	
-		cout : enter 6 digit service code
-		cin 6 digit code
-		cout if this is right or not
-		if not correct
-			go back loop
-		if correct
-			exit loop
-		cout enter comments?
-		cin comments
-		
-		save all inputs
-
-		cout to enter following things
-		cin date & time
-		cin date service was provided
-		cin member name and #
-		cin service code
-		cin service fee
-		
-		save all in object?
-		
-if (3)
-	display :
-		- add (1)
-		- delete (2)
-		-modify(3)
-	cin answer (in numbers)
-	
-	if (1)
-		- adding member
-	if (2)
-		- deleting member
-	if (3)
-		- access member account and modify
-
-if (4)
-	display :
-		- add (1)
-		- delete (2)
-		-modify(3)
-	cin answer (in numbers)
-	
-	if (1)
-		- adding provider
-	if (2)
-		- deleting provider
-	if (3)
-		- access provider account and modify
-
-
-cout would user like to do more functions
-cin answer
-if yes
-	loop
-if no
-	exit
-
-
 */
