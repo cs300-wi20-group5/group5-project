@@ -383,12 +383,6 @@ int Person::write_p_report(string &add_date, string &add_time, string &add_name,
 
 }
 
-int Person::write_m_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip) {
-
-  Member * ptr = dynamic_cast<Member*>(this);
-	ptr -> write_report(add_member_name, add_member_code, add_street, add_city, add_state, add_zip)
-}
-
 int Person::display_member_type()
 {
   cout << "---------------WEEKLY MEMBER REPORT--------------" << endl;
