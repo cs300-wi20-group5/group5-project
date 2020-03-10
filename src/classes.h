@@ -51,7 +51,7 @@ public:
     int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
     int test_p_write(); //Test function for write_p_report
 
-    //Functions regarding provider report below
+    //Functions regarding member report below
     int add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip);
     int display_m_reports(int member_code);
     int write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip);
@@ -94,7 +94,7 @@ public:
     int summary_report_check(int &total_providers, int &total_services, float &total_fees);
     int write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 
-    //Functions below are wrapper functions to convert Person* to Provider
+    //Functions below are wrapper functions to convert Person* to Member*
     int add_member_type(Member_Report * to_add);
     int display_member_type();
     int write_m_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip);
@@ -116,7 +116,6 @@ public:
     int add_to_end(Member_Report * to_add, Member_Report * current);
     int display_reports();
     int write_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip);
-    int write_report_service(string &add_date, string &add_name, string &add_service); 
     
 private:
     Member_Report * report;
@@ -172,7 +171,6 @@ public:
 
 	Member_Report *& go_next();
 	void display_member();
-	void display_service();
 
 private:
 	Member_Report * next;

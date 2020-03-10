@@ -90,14 +90,14 @@ int PeopleTable::write_p_report(Node * current, string &add_date, string &add_ti
 	
 }
 
-//For members
+//Write function for members
 int PeopleTable::write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip) {
   if(!current)
 		return 0;
 
 	int id = current -> data -> get_id();
 
-	if(id <= 999999999) {
+	if(id < INT_MAX) {
 		int check = current -> data -> write_m_report(current, new_date, new_name, new_service, new_memname, new_memcode, new_street, new_city, new_state, new_zip);
 
 		return check;
@@ -339,7 +339,7 @@ int PeopleTable::add_m_report(int member_code, string new_date, string new_name,
 	Member_Report * p = new Member_Report(new_date, new_name, new_service, new_memname, new_memcode, new_street, new_city, new_state, new_zip);
 
 	//Calling function from Person Class
-	current -> data -> add_provider_type(p);
+	current -> data -> add_member_type(p);
 
 	return 1;
 }
@@ -356,10 +356,6 @@ int PeopleTable::display_m_reports(int member_code) {
 	current -> data -> display_member_type();
 
 	return 1;
-}
-
-int PeopleTable::write_m_report(Node * current, string &new_date, string &new_name, string &new_service, string &new_memname, int &new_memcode, string &new_street, string &new_city, string &new_state, int &new_zip) {
-
 }
 
 
@@ -575,17 +571,7 @@ int Member::write_report(string &add_member_name, string &add_member_code, strin
 	add_city = this -> report -> get_city();
 	add_state = this -> report -> get_state();
 	add_zip = this -> report -> get_zip();
-
-	return 1;
-	}
-	
-	return 0;
-}
-
-int Member::write_report_service(string &add_date, string &add_name, string &add_service) {
-
-	if(this -> report) {
-	add_date = this -> report -> get_date();
+  add_date = this -> report -> get_date();
 	add_name = this -> report -> get_name();
 	add_service = this -> report -> get_service();
 
@@ -606,7 +592,6 @@ int Member::display_reports() {
 		while(temp)
 		{
 			temp -> display_member();
-			temp -> display_service();
 			temp = temp -> go_next();
 		}
 	}
@@ -614,18 +599,10 @@ int Member::display_reports() {
 
 //Display of individual info for members
 void Member_Report::display_member() {
-
 	cout << "Member Name: " << member_name << endl;
 	cout << "Member Code: " << member_code << endl;
 	cout << "Member Address: " << street << " " << city << ", " << state << "  " << zip << endl << endl;
-
-}
-
-//Display of the multiple services they have received
-void Member_Report::display_service() {
-
-	cout << "Date of Service: " << date_of_service << endl;
+  cout << "Date of Service: " << date_of_service << endl;
 	cout << "Provider Name: " << provider_name << endl;
 	cout << "Service Received: " << service_name << endl << endl;
-
 }
