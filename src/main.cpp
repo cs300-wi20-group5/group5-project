@@ -1,4 +1,3 @@
-//code goes here
 using namespace std;
 #include "classes.h"
 //#include <cstring>
@@ -7,12 +6,20 @@ using namespace std;
 int main()
 {
 	int response;
+	int valid_answer = 1;
 	Provider * provider_user;
 	Member * member_user;
 	PeopleTable data_base;
 
-  	data_base.files_read("../data/members.txt", 1);
-    	data_base.files_read("../data/providers.txt", 2);
+//  	data_base.files_read("../data/members.txt", 1);
+ //   	data_base.files_read("../data/providers.txt", 2);
+ 
+
+
+  	data_base.files_read("../data/old_members.txt", 1);
+    	data_base.files_read("../data/old_providers.txt", 2);
+ 
+
    
 	data_base.display1();	
 
@@ -77,15 +84,22 @@ int main()
 
 								cout<<"Please enter the new members name"<<endl;
 								getline(cin,new_member_name);
+								
 
 								do
 								{
-								cout<<"Please enter a new members nonexistent 9 digit ID"<<endl;
-								cin>>new_member_ID;
-								cin.ignore();
-								} while(new_user_id_checker(new_member_ID) == 0 || data_base.find_hash(new_member_ID,current) == 1 );
+									cout<<"Please enter a new members nonexistent 9 digit ID"<<endl;
+									cin>>new_member_ID;
+									cin.ignore();
+									if (new_user_id_checker(new_member_ID) == 0 || data_base.find_hash(new_member_ID,current) == 1 )
+									{
+										valid_answer = 0;
+										cout<<"Entered ID either exists already or is not 9 digits, please try again"<<endl<<endl;
+									}
+									else
+										valid_answer = 1;
+								}while (valid_answer == 0);
 
-							
 								member_user= new Member(new_member_ID,new_member_name);
 
 								int hashed_ID=data_base.hash_function(member_user->Member::get_id());
@@ -109,9 +123,17 @@ int main()
 									cout<<"Please enter the ID of the member you wish to remove"<<endl;
 									cin>>member_deleting;	
 									cin.ignore();
-								} while (data_base.find_hash(member_deleting,current) == 0);
+									if (data_base.find_hash(member_deleting,current) == 0)
+									{
+										valid_answer = 0;
+										cout<<"Entered ID does not exist, please try again"<<endl<<endl;
+									}
+									else
+										valid_answer = 1;
+								}while(valid_answer == 0);
 
 							}
+
 							else if (manager_sub_action == 3)
 							{
 
@@ -125,7 +147,14 @@ int main()
 									cout<<"Please enter the ID of the member you wish to modify"<<endl;
 									cin>>member_ID;	
 									cin.ignore();
-								} while (data_base.find_hash(member_ID,current) == 0);
+									if (data_base.find_hash(member_ID,current) == 0)
+									{
+										valid_answer = 0;
+										cout<<"Entered ID doesn't exist, please try again"<<endl<<endl;
+									}
+									else
+										valid_answer = 1;
+								}while(valid_answer == 0);
 
 								do
 								{
@@ -151,9 +180,7 @@ int main()
 
 										else
 										{
-											cout<<"adding new name now"<<endl;
 											data_base.person_modify(mod_string,member_ID,mod_choice);
-											cout<<"Done adding new name"<<endl;
 										}
 									}
 
@@ -243,7 +270,14 @@ int main()
 								cout<<"Please enter the new providers nonexistent 9 digit ID"<<endl;
 								cin>>new_provider_ID;
 								cin.ignore();
-							}while(new_user_id_checker(new_provider_ID) == 0 || data_base.find_hash(new_provider_ID,current));
+								if (new_user_id_checker(new_provider_ID) == 0 || data_base.find_hash(new_provider_ID,current))
+								{
+									valid_answer = 0;
+									cout<<"ID either exists already or is not 9 digits, please try again"<<endl<<endl;
+								}
+								else
+									valid_answer = 1;
+							}while (valid_answer == 0);
 
 
 							
@@ -271,12 +305,20 @@ int main()
 									cout<<"Please enter the Provider's ID you wish to delete"<<endl;		
 									cin>>provider_deleting;
 									cin.ignore();
-								} while (data_base.find_hash(provider_deleting,current) == 0);
+									if (data_base.find_hash(provider_deleting,current) == 0)
+									{
+										valid_answer = 0;
+										cout<<"Entered ID doesn't exist, please try again"<<endl<<endl;
+									}
+									else
+										valid_answer = 1;
+								}while(valid_answer ==  0);
 
 
 
 
 							}
+
 							else if (manager_sub_action == 3)
 							{
 							//modify current providers info
@@ -291,7 +333,16 @@ int main()
 									cout<<"Please enter the ID of the provider you wish to modify"<<endl;		
 									cin>>provider_ID;
 									cin.ignore();
-								} while (data_base.find_hash(provider_ID,current) == 0);
+									if (data_base.find_hash(provider_ID,current) == 0)
+									{
+										valid_answer = 0;
+										cout<<"ID doesn't exist, please try again"<<endl<<endl;
+									}
+									else
+										valid_answer = 1;
+
+								}while(valid_answer == 0);
+
 								do
 								{
 									cout<<"Please choose one of the categories from the provider to modify"<<endl;
@@ -390,7 +441,14 @@ int main()
 							cin>>provider_ID;
 							cin.ignore();
 
-						} while (data_base.find_hash(provider_ID,current) == 0);
+							if  (data_base.find_hash(provider_ID,current) == 0)
+							{
+								valid_answer = 0;
+								cout<<"ID doesn't exist, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer == 0);
 
 
 						data_base.display_reports(provider_ID);
@@ -411,7 +469,14 @@ int main()
 							cin>>member_ID;
 							cin.ignore();
 
-						} while (data_base.find_hash(provider_ID,current) == 0);
+							if (data_base.find_hash(member_ID,current) == 0)
+							{
+								valid_answer = 0;
+								cout<<"Entered ID doesn't exist, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer == 0);
 
 						cout<<"function not made yet "<<endl;
 
@@ -456,7 +521,14 @@ int main()
 				cout<<endl<<"Please input your provider ID number: "<<endl;
 				cin>>provider_ID;
 				cin.ignore();
-			} while (data_base.find_hash(provider_ID,current) == 0);
+				if (data_base.find_hash(provider_ID,current) == 0)
+				{
+					valid_answer = 0;
+					cout<<"Invalid ID, please try again"<<endl<<endl;
+				}
+				else
+					valid_answer = 1;
+			}while(valid_answer == 0);
 
 			do
 			{
@@ -472,7 +544,9 @@ int main()
 
 					if (provider_action == 1)
 					{
-						//display provider directory
+						cout<<endl;
+						Services();
+						cout<<endl;
 					}
 					else if (provider_action == 2)
 					{
@@ -487,54 +561,109 @@ int main()
 						Node * current;	
 						do
 						{
-						cout<<"Please enter your provider ID number again"<<endl;
-						cin>>provider_IDD;
-						cin.ignore();
-						} while (data_base.find_hash(provider_IDD,current) == 0);
+							cout<<"Please enter your provider ID number"<<endl;
+							cin>>provider_IDD;
+							cin.ignore();
+							if (data_base.find_hash(provider_IDD,current) == 0)
+							{
+								valid_answer = 0;
+								cout<<"Invalid ID, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer == 0);
 
 						do
 						{
 							cout<<"Please enter the members ID number:"<<endl;
 							cin>>member_IDD;
 							cin.ignore();
-						} while (data_base.find_hash(member_IDD,current) == 0);
+							if(data_base.find_hash(member_IDD,current) == 0)
+							{
+								valid_answer = 0;
+								cout<<"Invalid Id, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer ==0);
+
 						/*
 						 display directory
 						 checks input and such and outputs and such
 						 */
-						
+						cout<<endl;
+						Services();
+						cout<<endl;
+					
 						do
 						{	
 							cout<<"Please enter the current date in the format of 'MM-DD-YYYY'"<<endl;
 							cin>>date;
 							cin.ignore();
-						} while (date_checker(date) == 0);
+							if (date_checker(date) == 0)
+							{
+								valid_answer = 0;
+								cout<<"Invalid input, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer == 0);
 
 						do
 						{
 							cout<<"Please enter the current time as 'HH:MM'"<<endl;
 							cin>>time;
 							cin.ignore();	
-						} while (time_checker(time) == 0);
+							if (time_checker(time) == 0)
+							{
+								valid_answer = 0;
+								cout<<"Invalid input, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer == 0);
 						
 						do
 						{
 							cout<<"Please enter the member's name"<<endl;
 							getline(cin, member_name);
-						} while (name_size_checker (member_name) == 0 || member_name.compare(current -> data -> get_name()));
+							if (name_size_checker (member_name) == 0 || member_name.compare(current -> data -> get_name()))
+							{
+								valid_answer = 0;
+								cout<<"Invalid name, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer == 0);
+
 						do
 						{
-							cout<<"Please once again enter the service code"<<endl;
+							cout<<"Please enter the service code"<<endl;
 							cin>>service_code;
 							cin.ignore();
-						} while (service_code_checker(service_code) == 0);
+							if (service_code_checker(service_code) == 0)
+							{
+								valid_answer = 0;
+								cout<<"Invalid service code, please try again"<<endl<<endl;
+							}
+							else 
+								valid_answer = 1;
+						}while (valid_answer == 0);
 
 						do
 						{
 							cout<<"Please enter the service fee for the service"<<endl;
 							cin>>service_fee;
 							cin.ignore();
-						} while (service_fee_checker (service_fee) == 0);
+							if (service_fee_checker (service_fee) == 0)
+							{
+								valid_answer = 0;
+								cout<<"Invalid service fee, please try again"<<endl<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while (valid_answer == 0);
+
 						
 						data_base.add_provider_report(provider_IDD,date,time,member_name,member_IDD,service_code,service_fee);
 					}
@@ -565,7 +694,8 @@ int main()
 		}
 
 	} while (response != 0 && response != 1);
- 
+
+       	cout<<endl<<endl<<endl;	
 	data_base.display1();	
 
 	return 0;
