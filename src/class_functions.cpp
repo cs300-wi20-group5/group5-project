@@ -1,9 +1,17 @@
 #include "classes.h"
 
+
 /*
 int main() {
     PeopleTable test;
     //Below I am testing if adding provider reports works
+=======
+/*
+int main() {
+    PeopleTable test;
+
+    //Below I am testing if adding provider reports works
+
     int provider_code = 385773619;	//This should be saved from when the provider logged in
     //This information will be gathered when the provider bills ChocAn 
     //and they are prompted to verify the service they have provided
@@ -13,137 +21,169 @@ int main() {
     int mem_code = 123456789;
     int serv_code = 123456;
     float fee = 85.99;
+
     test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
+
+
+    test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
+
+
     date = "2/24/2020";
     time = "12:30 am";
     mem_name = "Diana Mejia";
     mem_code = 987654321;
     serv_code = 654321;
     fee = 72.50;
+
     test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
+
+    test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
+
+
     date = "2/22/2020";
     time = "7:02 pm";
     mem_name = "Gilbert Ho";
     mem_code = 927481938;
     serv_code = 541353;
     fee = 201.83;
+
     test.add_provider_report(309123411,date,time,mem_name,mem_code,serv_code,fee);
+
+    test.add_provider_report(309123411,date,time,mem_name,mem_code,serv_code,fee);
+
+
     test.display_reports(provider_code);
     test.display_reports(309123411);
     
     test.summary_report();
+
+
+    
+
+
     test.files_read("../data/members.txt", 1);
     test.files_read("../data/providers.txt", 2);
     test.display1();
-    test.files_write("../data/test_members.txt");
+    test.files_write("../data/test_members.txt", 1);
+    test.files_write("../data/test_providers.txt", 2);
+
+    test.files_read("../data/reports_test.txt", 3);
+    test.display_reports(385773619);
+    test.display_reports(309123411);
+	
+    test.files_write("../data/reports_test_test.txt", 3);
+
     return 0;
 }
 */
 //--------------------- People Table Functions ---------------------------
 
 int PeopleTable::files_read(string fileName, int dataType) {
+	if(dataType == 1 || dataType == 2)
+		files_read_MP(fileName, dataType);
+	if(dataType == 3)
+		files_read_PR(fileName);
+}
 
-    ifstream file1(fileName);
-    string str;
-
-    while (getline(file1, str, ',') )
-    {
+void PeopleTable::files_read_MP(string fileName, int dataType) {
+	ifstream file1(fileName);
+	int id;
+	string str;
 	Person * p = nullptr;
-        int id = stoi(str);
-        if(getline(file1, str, '\n')) {
-            Person * p = new Member(id, str);
 
-	    if(dataType == 1)
-		p = new Member(id, str);
-	    if(dataType == 2)
-		p = new Provider(id, str);
+	while(getline(file1, str, ',')) {	
+		id = stoi(str);
+	    	if(getline(file1, str, '\n')) {
 
-            int bucket = this -> hash_function(id);
-            Node * temp = new Node(p);
-            add_node(temp, bucket);
-        }
-        else
-            break;
-    }
+			if(dataType == 1)
+				p = new Member(id, str);
+			if(dataType == 2)
+				p = new Provider(id, str);
 
-    return 0;
-}
-
-//Thomas call this function in a for-loop that traverses the entire hashtable
-//Once a pointer is pointed to a node, call this function to get back data by reference
-int PeopleTable::write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
-
-	if(!current)
-		return 0;
-
-	//All 9-digit provider codes start with 3, isolating those codes
-	int id = current -> data -> get_id();
-	id = id%300000000;
-
-	if(id < 200000000) {
-		int check = current -> data -> write_p_report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
-
-		return check;
-	}
-
-	return 0;
-	
-}
-
-int PeopleTable::test_p_write() {
-
-	string adate;
-	string atime;
-	string aname;
-	int amemcode;
-	int aservcode;
-	float afee;
-
-	Node * current;
-	for(int i = 0; i < 23; ++i) {
-
-	current = table[i];	
-
-	while(current) {
-	int check = write_p_report(current, adate, atime, aname, amemcode, aservcode, afee);
-
-	if(check == 1) {
-	cout << "--------TESTING PROVIDE WRITE BACK FUNCTION---------" << endl;
-	cout << "Date of Service: " << adate << endl;
-	cout << "Time: " << atime << endl;
-	cout << "Member Name: " << aname << endl;
-	cout << "Member Code: " << amemcode << endl;
-	cout << "Service Code: " << aservcode << endl;
-	cout << "Service Fee: $" << afee << endl;
-	cout << endl;
-
-	}
-		current = current -> next;
-	}
+			int bucket = this -> hash_function(id);
+			Node * temp = new Node(p);
+			add_node(temp, bucket);
+	    	}
 	}
 }
 
-int PeopleTable::files_write(string fileName) {
-    
+void PeopleTable::files_read_PR(string fileName) {
+	ifstream file1(fileName);
+    	int add_member_code, add_service_code, id;
+    	string add_time, add_date, add_name, temp, str;
+    	float add_fee;
+   	
+	while(getline(file1, temp, ',') && !file1.eof()) {	
+		id = stoi(temp);	
+
+		getline(file1, add_date, ',');
+
+		getline(file1, add_time, ',');
+
+		getline(file1, add_name, ',');
+
+		getline(file1, temp, ',');
+		add_member_code = stoi(temp);
+
+		getline(file1, temp, ',');
+		add_service_code = stoi(temp);
+	    
+		//  not including delimiter here since its the last value, 
+		//  and with the delimiter it causes an error with stof 
+		getline(file1, temp, '\n');
+		add_fee = stof(temp);
+	     
+		add_provider_report(id, add_date, add_time, add_name, add_member_code, add_service_code, add_fee);
+   	} 
+}
+
+void PeopleTable::files_write(string fileName, int dataType) {
+	if(dataType == 1 || dataType == 2)
+	       	files_write_MP(fileName, dataType);
+	if(dataType == 3)
+		files_write_PR(fileName);
+}
+
+void PeopleTable::files_write_MP(string fileName, int dataType) {
     ofstream file1(fileName);
     for(int i = 0; i < 23; ++i) {
 	if(this->table[i]) {
 	    Node * tmp = this->table[i];
 	    while(tmp) {
-		file1 << tmp->data->get_id();
-		file1 << ",";
-		file1 << tmp->data->get_name();
-		file1 << endl;	
-
+		if(tmp->data->get_type() == dataType) {
+			file1 << tmp->data->get_id(); 
+			file1 << ",";
+			file1 << tmp->data->get_name();
+			file1 << endl;	
+		}
 		tmp = tmp->next;
 	    }
 	}
-
     } 
 
     file1.close(); 
 }
-    
+
+
+// Function that loops through hash table to find all reports, when it finds a valid provider, 
+// it goes down into the provider and writes all reports to file
+void PeopleTable::files_write_PR(string fileName) {
+	ofstream file1(fileName);
+	Node * tmp;
+	
+	for(int i = 0; i < 23; ++i) {
+		tmp = this->table[i];
+		if(this->table[i]) {	
+			while(tmp) {	
+				if(tmp->data->get_type() == 2)
+					tmp->data->wrapperFW(file1);
+				tmp = tmp->next;
+			}	
+		}
+	}
+	file1.close();
+}
+
 int PeopleTable::hash_function(int id) {
     return id % 23;
 }
@@ -168,8 +208,10 @@ int PeopleTable::add_to_end(Node *to_add, Node *current) {
 
 int PeopleTable::display1() {
     for(int i = 0; i < 23; ++i) {
-        cout << "index " << i << ": ";
-        display2(table[i]);
+	if(table[i]) {
+		cout << "index " << i << ": ";
+		display2(table[i]);
+	}
     }
 }
 
@@ -221,7 +263,7 @@ int PeopleTable::add_provider_report(int provider_code, string add_date, string 
 
 	//Calling provider report constructor to make the report
 	Provider_Report * p = new Provider_Report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
-
+  
 	//Calling function from Person Class
 	current -> data -> add_provider_type(p);
 
@@ -243,6 +285,7 @@ int PeopleTable::add_provider_report()
     current -> data -> add_member_
   return 1;
 }
+
 int PeopleTable::display_personal_report(int code, int choice) {
 
 	int flag = 0;
@@ -311,6 +354,7 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 
 }
 
+
 int PeopleTable::add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip) {
 	int flag = 0;
 	Node * current;
@@ -335,6 +379,368 @@ int PeopleTable::display_m_reports(int member_code) {
 	flag = find_hash(member_code, current);
 	if(flag == 0)
 		return 0;	//returns 0, code is not found within the system
+
+int PeopleTable::person_modify (string modify, int ID,int option)
+{
+	Node * temp;
+	if (find_hash(ID, temp) == 0)
+		return 0;
+	else
+		return temp-> data ->info_modify(modify, option);	
+	return true;
+} 
+
+
+
+
+//----------------------------------- Person Functions -------------------------------------
+//The functions below use dynamic_cast to convert Person* into Provider*
+//This is required in order to get into the scope of the provider to reach Provider data
+
+// Wrapper function for writing data from a provider report to a file
+void Person::wrapperFW(ofstream & file1) {
+	Provider * ptr = dynamic_cast<Provider*>(this);
+	if(ptr)
+		ptr->fileWrite(file1);
+}
+
+int Person::add_provider_type(Provider_Report * to_add)
+{	
+	Provider * ptr = dynamic_cast<Provider*>(this);
+	ptr -> add_report(to_add);
+
+}
+
+int Person::write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
+
+	Provider * ptr = dynamic_cast<Provider*>(this);
+	ptr -> write_report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
+
+}
+int Person::display_personal_type(int choice) {
+
+	int check;	
+	if(choice == 1) {
+		Provider * ptr = dynamic_cast<Provider*>(this);
+		check = ptr -> display_reports();
+	}
+	/*
+	else {
+		Member * ptr = dynamic_cast<Member*>(this);
+		check = ptr -> display_reports();
+	}
+*/
+	return check;
+}
+int Person::display_provider_type() {
+
+	cout << "---------------WEEKLY REPORT--------------" << endl;
+	cout << "Provider: " << this->get_name() << endl;
+	cout << "Provider Code: " << this->get_id() << endl;
+	cout << endl;
+
+	Provider * ptr = dynamic_cast<Provider*>(this);
+	ptr -> display_reports();
+}
+
+int Person::summary_report_check(int &total_providers, int &total_services, float &total_fees)
+{
+	int check;
+	Provider * ptr = dynamic_cast<Provider*>(this);
+  	check = ptr -> summary_report(total_providers, total_services, total_fees);
+
+	return check; //Will return 0 if there are no reports for Provider
+}
+
+
+int Person::info_modify( string modify, int option)
+{
+	if (option == 1)
+		name = modify;
+//	else if (option == 2)
+//		address = modify;
+//	else if (option ==3)
+//		city = modify;
+//	else if (option ==4)
+//		state = modify;
+	else 
+		return false;	
+	return true;	
+}
+
+
+//------------------------ Provider and Provider Report Functions ---------------------------
+
+Provider_Report *& Provider_Report::go_next(){
+	return next;
+}
+
+//Adds node to provider report LLL
+int Provider::add_report(Provider_Report * to_add){
+
+	if(!report)
+		report = to_add;
+	else
+		add_to_end(to_add, this->report);
+}
+
+//Adds node to end of provider report LLL
+int Provider::add_to_end(Provider_Report * to_add, Provider_Report * current){
+	if(!current)
+		return 0;
+	else if(!current -> go_next())
+		current -> go_next() = to_add;
+	else
+		add_to_end(to_add, current -> go_next());
+	return 0;
+}
+
+int Provider::write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
+
+	if(this -> report) {
+		add_date = this -> report -> get_date();
+		add_time = this -> report -> get_time();
+		add_name = this -> report -> get_name();
+		add_member_code = this -> report -> get_mem_code();
+		add_service_code = this -> report -> get_serv_code();
+		add_fee = this -> report -> get_fee();
+
+		return 1;
+	}
+	
+	return 0;
+}
+
+//Displays all reports for specific provider
+int Provider::display_reports() {
+	if(!report)
+		return 0;
+	else
+	{	
+		Provider_Report * temp = report;
+
+		while(temp)
+		{
+			temp -> display();
+			temp = temp -> go_next();
+		}
+	}
+}
+
+//Displays information for summary reports and adds to totals by reference
+int Provider::summary_report(int &total_providers, int &total_services, float &total_fees)
+{
+	if(!report)
+		return 0;
+	
+	string provider_name = this -> get_name();
+	cout << "Provider: " << provider_name << endl;
+
+	Provider_Report * temp = report;
+	int weekly_count = 0;	//total number of consultations this provider has had
+	float weekly_fee = 0;
+
+	while(temp) {
+		++weekly_count;
+		weekly_fee += temp -> get_fee();
+		temp = temp -> go_next();
+	}	
+
+	cout << "Total Number of Consultations: " << weekly_count << endl;
+	cout << "Total fee for week: $" << weekly_fee << endl;
+	cout << endl;
+
+	total_services += weekly_count;
+	total_fees += weekly_fee;
+	++total_providers;
+
+	return 1;
+
+}
+
+// Function that takes the stored reports and writes them to file, 
+// has a loop to go through all reports since they're stored in a LLL
+void Provider::fileWrite(ofstream & file1) {	
+	Provider_Report * temp = report;	
+
+	while(temp) {
+		if(!temp)
+			return;
+		if(temp) {
+			file1 << this->get_id();
+			file1 << ',';
+			file1 << temp->get_date();
+			file1 << ',';
+			file1 << temp->get_time();	
+			file1 << ',';
+			file1 << temp->get_name();
+			file1 << ',';
+			file1 << temp->get_mem_code();	
+			file1 << ',';
+			file1 << temp->get_serv_code();
+			file1 << ',';
+			file1 << temp->get_fee();
+			file1 << endl;
+		}
+		temp = temp->go_next();	
+	}
+
+}
+
+//Display of individual reports for providers
+int Provider_Report::display() {
+
+	cout << "Date of Service: " << date_of_service << endl;
+	cout << "Time: " << time << endl;
+	cout << "Member Name: " << member_name << endl;
+	cout << "Member Code: " << member_code << endl;
+	cout << "Service Code: " << service_code << endl;
+	cout << "Service Fee: $" << fee << endl;
+	cout << endl;
+
+}
+
+int Services()
+{
+        string services[] = {"Yoga\nIntense stretches\n98201733\n\n", "Therapy talk\nTalking with a doctor about your problem\n91237912\n\n","Detoxification of chocolate\nWhere they remove chocolate from your home\n82130440\n\n","Short-term residential treatment\nStay at the facility for a week,getting prepared for long term counseling \n23123989\n\n","Recovery sessions\nBeing supervise when being around chocolate. This is for long term customers\n23123469\n\n","Meditation\nLearn what meditating is and how it can be use to get over your addiction\n2342389\n\n","Find a substitution\nDoctor will help you find something to get your mind off of chocolate\n12312312\n\n"};
+        for(int i =0;i<7;++i)
+        {
+                cout << services[i];
+        }
+        return 0;
+}
+
+// - - - - - - - - - - -  - - - -  - - -  - - -
+// functions used as checkers
+
+
+int new_user_id_checker( int id)
+{
+
+	 int temp;
+	 int count = 0;
+	 temp = id;
+	 while(temp != 0) 
+	 {
+		 ++count;
+        	temp /= 10;
+    	 }
+	
+	 if (count != 9)
+		 return false;
+
+	 return true;
+
+}
+
+int name_size_checker(string name)
+{
+	if (name.size() >25)
+		return false;
+	return true;
+}
+
+int service_code_checker(int service_code)
+{
+
+	 int temp;
+	 int count = 0;
+	 temp = service_code;
+	 while(temp != 0) 
+	 {
+		 ++count;
+        	temp /= 10;
+    	 }
+	
+	 if (count != 6)
+		 return false;
+
+	 return true;
+
+}
+
+int service_fee_checker(float service_fee)
+{
+	if (service_fee < 0)
+		return false;
+	if (service_fee > 999.99)
+		return false;
+
+	return true;
+}
+
+
+
+int date_checker(string date)
+{
+	cout<<endl;
+
+	if (date.size() != 10)
+		return false;
+	else if ( (date[2] != date [5]) || (date[2] != '-') )
+		return false;
+	
+	else if ( (date[0] != '1') && (date[0] != '0') )
+	{
+		return false;
+	}
+
+	else  
+	{
+		for (int i = 0; i < date.size(); ++i) 
+		{
+			if (isdigit(date[i]) == false && i != 2 && i != 5) 
+            			return false; 
+		}
+  
+	}
+	
+	return true;
+}
+
+
+int time_checker(string time)
+{
+	if(time.size() != 5)
+		return false;
+
+	else if (time[2] != ':')
+		return false;
+	
+	else
+	{
+		for (int i = 0; i < time.size(); ++i) 
+		{
+			if (isdigit(time[i]) == false && i != 2)
+            			return false; 
+		}
+	}
+
+	return true;
+}
+
+
+int street_address_checker( string street_address)
+{
+	if ( street_address.size() > 25)
+		return false;
+	return true;
+}
+
+int city_checker( string city)
+{
+	if (city.size() >14)
+		return false;
+	return true;
+}
+
+int state_checker(string state)
+{
+	if (state.size() >3)
+		return false;
+	return true;
+}
+
 
 	//Call function that uses RTTI to convert Person* into Member*
 	current -> data -> display_member_type();
