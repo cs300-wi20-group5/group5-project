@@ -561,3 +561,14 @@ int Provider_Report::display() {
 	cout << endl;
 
 }
+
+int Services()
+{
+        string services[] = {"Yoga\nIntense stretches\n98201733\n\n", "Therapy talk\nTalking with a doctor about your problem\n91237912\n\n","Detoxification of chocolate\nWhere they remove chocolate from your home\n82130440\n\n","Short-term residential treatment\nStay at the facility for a week,getting prepared for long term counseling \n23123989\n\n","Recovery sessions\nBeing supervise when being around chocolate. This is for long term customers\n23123469\n\n","Meditation\nLearn what meditating is and how it can be use to get over your addiction\n2342389\n\n","Find a substitution\nDoctor will help you find something to get your mind off of chocolate\n12312312\n\n"};
+        for(int i =0;i<7;++i)
+        {
+                cout << services[i];
+        }
+        return 0;
+}
+
