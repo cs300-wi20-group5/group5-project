@@ -60,7 +60,9 @@ public:
 
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
-    
+
+    int person_modify(string modify, int ID, int option);
+
 private:
     Node ** table;
 };
@@ -100,6 +102,11 @@ public:
 
     void wrapperFW(ofstream & file1);
 	
+      //modifies any person data type that is a string type
+    int info_modify(string modify, int option);
+    //modifies any person data type that is an int type
+    //int info_modify2(int modify, int option);
+
 
 protected:
     int id;
@@ -197,3 +204,17 @@ private:
    	float fee;
 };
 
+
+
+
+
+
+int date_checker(string date);
+int time_checker(string time);
+int name_size_checker(string name);
+int service_code_checker(int service_code);
+int service_fee_checker(float service_fee);
+int new_user_id_checker( int id);
+int street_address_checker( string street_address);
+int city_checker( string city);
+int state_checker(string state);

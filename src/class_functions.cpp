@@ -372,6 +372,20 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 	return 0;
 
 }
+
+int PeopleTable::person_modify (string modify, int ID,int option)
+{
+	Node * temp;
+	if (find_hash(ID, temp) == 0)
+		return 0;
+	else
+		return temp-> data ->info_modify(modify, option);	
+	return true;
+} 
+
+
+
+
 //----------------------------------- Person Functions -------------------------------------
 //The functions below use dynamic_cast to convert Person* into Provider*
 //This is required in order to get into the scope of the provider to reach Provider data
@@ -430,6 +444,23 @@ int Person::summary_report_check(int &total_providers, int &total_services, floa
 
 	return check; //Will return 0 if there are no reports for Provider
 }
+
+
+int Person::info_modify( string modify, int option)
+{
+	if (option == 1)
+		name = modify;
+//	else if (option == 2)
+//		address = modify;
+//	else if (option ==3)
+//		city = modify;
+//	else if (option ==4)
+//		state = modify;
+	else 
+		return false;	
+	return true;	
+}
+
 
 //------------------------ Provider and Provider Report Functions ---------------------------
 
@@ -570,5 +601,136 @@ int Services()
                 cout << services[i];
         }
         return 0;
+}
+
+// - - - - - - - - - - -  - - - -  - - -  - - -
+// functions used as checkers
+
+
+int new_user_id_checker( int id)
+{
+
+	 int temp;
+	 int count = 0;
+	 temp = id;
+	 while(temp != 0) 
+	 {
+		 ++count;
+        	temp /= 10;
+    	 }
+	
+	 if (count != 9)
+		 return false;
+
+	 return true;
+
+}
+
+int name_size_checker(string name)
+{
+	if (name.size() >25)
+		return false;
+	return true;
+}
+
+int service_code_checker(int service_code)
+{
+
+	 int temp;
+	 int count = 0;
+	 temp = service_code;
+	 while(temp != 0) 
+	 {
+		 ++count;
+        	temp /= 10;
+    	 }
+	
+	 if (count != 6)
+		 return false;
+
+	 return true;
+
+}
+
+int service_fee_checker(float service_fee)
+{
+	if (service_fee < 0)
+		return false;
+	if (service_fee > 999.99)
+		return false;
+
+	return true;
+}
+
+
+
+int date_checker(string date)
+{
+	cout<<endl;
+
+	if (date.size() != 10)
+		return false;
+	else if ( (date[2] != date [5]) || (date[2] != '-') )
+		return false;
+	
+	else if ( (date[0] != '1') && (date[0] != '0') )
+	{
+		return false;
+	}
+
+	else  
+	{
+		for (int i = 0; i < date.size(); ++i) 
+		{
+			if (isdigit(date[i]) == false && i != 2 && i != 5) 
+            			return false; 
+		}
+  
+	}
+	
+	return true;
+}
+
+
+int time_checker(string time)
+{
+	if(time.size() != 5)
+		return false;
+
+	else if (time[2] != ':')
+		return false;
+	
+	else
+	{
+		for (int i = 0; i < time.size(); ++i) 
+		{
+			if (isdigit(time[i]) == false && i != 2)
+            			return false; 
+		}
+	}
+
+	return true;
+}
+
+
+int street_address_checker( string street_address)
+{
+	if ( street_address.size() > 25)
+		return false;
+	return true;
+}
+
+int city_checker( string city)
+{
+	if (city.size() >14)
+		return false;
+	return true;
+}
+
+int state_checker(string state)
+{
+	if (state.size() >3)
+		return false;
+	return true;
 }
 
