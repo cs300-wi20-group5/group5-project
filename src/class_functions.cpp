@@ -84,14 +84,11 @@ void PeopleTable::files_read_MP(string fileName, int dataType) {
 
 			int bucket = this -> hash_function(id);
 			Node * temp = new Node(p);
-			add_node(temp, bucket);n
+			add_node(temp, bucket);
 	    	}
 	}
 }
 
-int PeopleTable::files_write(string fileName) {
-    
-=======
 void PeopleTable::files_read_PR(string fileName) {
 	ifstream file1(fileName);
     	int add_member_code, add_service_code, id;
@@ -287,7 +284,7 @@ int PeopleTable::find_hash(int code, Node *& current) {
 	if(flag != 1)
 		return 0;	
 	else
-		return 1;n
+		return 1;
 
 }
 
@@ -437,18 +434,12 @@ int Person::add_member_type(Member_Report * to_add)
 	Member * ptr = dynamic_cast<Member*>(this);
 	ptr -> add_report(to_add);
 
+}
 // Wrapper function for writing data from a provider report to a file
 void Person::wrapperFW(ofstream & file1) {
 	Provider * ptr = dynamic_cast<Provider*>(this);
 	if(ptr)
 		ptr->fileWrite(file1);
-}
-
-int Person::add_provider_type(Provider_Report * to_add)
-{	
-	Provider * ptr = dynamic_cast<Provider*>(this);
-	ptr -> add_report(to_add);
-
 }
 
 int Person::write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
@@ -715,10 +706,9 @@ int Member::display_reports() {
 			temp = temp -> go_next();
 		}
 	}
+}
 
-
-int Services()
-{
+int Services() {
         string services[] = {"Yoga\nIntense stretches\n98201733\n\n", "Therapy talk\nTalking with a doctor about your problem\n91237912\n\n","Detoxification of chocolate\nWhere they remove chocolate from your home\n82130440\n\n","Short-term residential treatment\nStay at the facility for a week,getting prepared for long term counseling \n23123989\n\n","Recovery sessions\nBeing supervise when being around chocolate. This is for long term customers\n23123469\n\n","Meditation\nLearn what meditating is and how it can be use to get over your addiction\n2342389\n\n","Find a substitution\nDoctor will help you find something to get your mind off of chocolate\n12312312\n\n"};
         for(int i =0;i<7;++i)
         {
