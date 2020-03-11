@@ -42,6 +42,22 @@ public:
     int add_to_end(Node * to_add, Node * current);
     int display1();
     int display2(Node * current);
+    int find_hash(int code, Node *& current);
+    int display_personal_report(int code, int choice);
+
+    //Functions regarding provider report below
+    int add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee);
+    int display_reports(int provider_code); 
+    int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
+    int test_p_write(); //Test function for write_p_report
+
+    //Functions regarding member report below
+    int add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip);
+    int display_m_reports(int member_code);
+    
+    int summary_report();
+    int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
+    
 private:
     Node ** table;
 };
@@ -66,8 +82,22 @@ public:
         id = new_id;
         name = new_name;
     }
+    virtual ~Person() {}
     int get_id() {return this -> id;}
     string get_name() {return this -> name;}
+
+    //Functions below are wrapper functions to convert Person* to Provider*
+    int add_provider_type(Provider_Report * to_add);
+    int display_provider_type();
+    int display_personal_type(int choice);
+    int summary_report_check(int &total_providers, int &total_services, float &total_fees);
+    int write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
+
+    //Functions below are wrapper functions to convert Person* to Member*
+    int add_member_type(Member_Report * to_add);
+    int display_member_type();
+    
+
 protected:
     int id;
     string name;
@@ -76,22 +106,32 @@ protected:
 class Member: public Person {
 public:
     Member(int a, string b) : Person(a, b) {
+	report = nullptr;
     }
 
     //Need function to add member reports
+    int add_report(Member_Report * to_add);
+    int add_to_end(Member_Report * to_add, Member_Report * current);
+    int display_reports();
+    int write_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip, string & add_date, string &add_name, string &add_service);
     
 private:
-    Member_Report * report;	//Pointer for report LLL
+    Member_Report * report;
 
 };
 
 class Provider: public Person {
 public:
     Provider(int a, string b) : Person(a, b) {
+	    report = nullptr;
     }
 
-    //Need function to add provider reports
-
+    //need a function that will return info to be saved
+    int add_report(Provider_Report * to_add);
+    int add_to_end(Provider_Report * to_add, Provider_Report * current);
+    int display_reports();
+    int summary_report(int &total_providers, int &total_services, float &total_fees);
+    int write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 private:
     Provider_Report * report;
 
@@ -100,24 +140,50 @@ private:
 //Below report classes will act as nodes to form the reports
 class Member_Report {
 public:
-	Member_Report(string new_date, string new_name, string new_service)
+	Member_Report(string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip)
 	{
 		date_of_service = new_date;
 		provider_name = new_name;
 		service_name = new_service;
+		member_name = new_memname;
+		member_code = new_memcode;
+		street = new_street;
+		city = new_city;
+		state = new_state;
+		zip = new_zip;
 
 		next = nullptr;
 	}
 
-//Functions involving the member report will go below
+	//Functions involving the member report will go below
+	string get_date() {return this->date_of_service;};
+	string get_name() {return this->provider_name;};
+	string get_service() {return this->service_name;};
+	string get_mem_name() {return this->member_name;};
+	int get_code() {return this->member_code;};
+	string get_street() {return this->street;};
+	string get_city() {return this->city;};
+	string get_state() {return this->state;};
+	int get_zip() {return this->zip;};
+
+
+	Member_Report *& go_next();
+	void display_member();
 
 private:
 	Member_Report * next;
 
 	string date_of_service;
 	string provider_name;
+	string member_name;
 	string service_name;
+	int member_code;
+	string street;
+	string city;
+	string state;
+	int zip;
 };
+
 
 class Provider_Report {
 public:
@@ -132,8 +198,17 @@ public:
 		
 		next = nullptr;
 	}
+	
+	//Below are used for getter functions
+	string get_date() {return this->date_of_service;}
+	string get_time() {return this->time;}
+	string get_name() {return this->member_name;}
+	int get_mem_code() {return this->member_code;}
+	int get_serv_code() {return this->service_code;}
+	float get_fee() {return this->fee;}
 
-//Functions involving the provider report will go below
+	Provider_Report *& go_next();
+	int display();
 	
 private:
 	Provider_Report * next;
@@ -145,6 +220,3 @@ private:
    	int service_code;
    	float fee;
 };
-
-
-
