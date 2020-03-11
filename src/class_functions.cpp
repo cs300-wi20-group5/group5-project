@@ -1,4 +1,5 @@
 #include "classes.h"
+
 /*
 int main() {
     PeopleTable test;
@@ -16,13 +17,14 @@ int main() {
     float fee = 85.99;
 
     test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
-
+  
     date = "2/24/2020";
     time = "12:30 am";
     mem_name = "Diana Mejia";
     mem_code = 987654321;
     serv_code = 654321;
     fee = 72.50;
+
 
     test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
 
@@ -32,14 +34,13 @@ int main() {
     mem_code = 927481938;
     serv_code = 541353;
     fee = 201.83;
-
+  
     test.add_provider_report(309123411,date,time,mem_name,mem_code,serv_code,fee);
 
     test.display_reports(provider_code);
     test.display_reports(309123411);
     
     test.summary_report();
-    
 
     test.files_read("../data/members.txt", 1);
     test.files_read("../data/providers.txt", 2);
@@ -83,11 +84,14 @@ void PeopleTable::files_read_MP(string fileName, int dataType) {
 
 			int bucket = this -> hash_function(id);
 			Node * temp = new Node(p);
-			add_node(temp, bucket);
+			add_node(temp, bucket);n
 	    	}
 	}
 }
 
+int PeopleTable::files_write(string fileName) {
+    
+=======
 void PeopleTable::files_read_PR(string fileName) {
 	ifstream file1(fileName);
     	int add_member_code, add_service_code, id;
@@ -283,7 +287,7 @@ int PeopleTable::find_hash(int code, Node *& current) {
 	if(flag != 1)
 		return 0;	
 	else
-		return 1;
+		return 1;n
 
 }
 
@@ -298,13 +302,14 @@ int PeopleTable::add_provider_report(int provider_code, string add_date, string 
 
 	//Calling provider report constructor to make the report
 	Provider_Report * p = new Provider_Report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
-	
+
 	//Calling function from Person Class
 	current -> data -> add_provider_type(p);
 
 	return 1;
 
 }
+
 int PeopleTable::display_personal_report(int code, int choice) {
 
 	int flag = 0;
@@ -373,6 +378,38 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 
 }
 
+
+int PeopleTable::add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip) {
+	int flag = 0;
+	Node * current;
+
+	flag = find_hash(member_code, current);
+	if(flag == 0)
+		return 0;	//returns 0, code is not found within the system
+
+	//Calling member report constructor to make the report
+	Member_Report * p = new Member_Report(new_date, new_name, new_service, new_memname, new_memcode, new_street, new_city, new_state, new_zip);
+
+	//Calling function from Person Class
+	current -> data -> add_member_type(p);
+
+	return 1;
+}
+
+int PeopleTable::display_m_reports(int member_code) {
+  int flag = 0;
+	Node * current;
+
+	flag = find_hash(member_code, current);
+	if(flag == 0)
+		return 0;	//returns 0, code is not found within the system
+
+	//Call function that uses RTTI to convert Person* into Member*
+	current -> data -> display_member_type();
+
+	return 1;
+}
+
 int PeopleTable::person_modify (string modify, int ID,int option)
 {
 	Node * temp;
@@ -383,12 +420,22 @@ int PeopleTable::person_modify (string modify, int ID,int option)
 	return true;
 } 
 
-
-
-
 //----------------------------------- Person Functions -------------------------------------
 //The functions below use dynamic_cast to convert Person* into Provider*
 //This is required in order to get into the scope of the provider to reach Provider data
+
+
+int Person::add_provider_type(Provider_Report * to_add)
+{	
+	Provider * ptr = dynamic_cast<Provider*>(this);
+	ptr -> add_report(to_add);
+
+}
+
+int Person::add_member_type(Member_Report * to_add)
+{	
+	Member * ptr = dynamic_cast<Member*>(this);
+	ptr -> add_report(to_add);
 
 // Wrapper function for writing data from a provider report to a file
 void Person::wrapperFW(ofstream & file1) {
@@ -410,6 +457,18 @@ int Person::write_p_report(string &add_date, string &add_time, string &add_name,
 	ptr -> write_report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
 
 }
+
+int Person::display_member_type()
+{
+  cout << "---------------WEEKLY MEMBER REPORT--------------" << endl;
+	cout << "Member: " << this->get_name() << endl;
+	cout << "Member Code: " << this->get_id() << endl;
+	cout << endl;
+
+	Member * ptr = dynamic_cast<Member*>(this);
+	ptr -> display_reports();
+}
+
 int Person::display_personal_type(int choice) {
 
 	int check;	
@@ -417,14 +476,21 @@ int Person::display_personal_type(int choice) {
 		Provider * ptr = dynamic_cast<Provider*>(this);
 		check = ptr -> display_reports();
 	}
+
 	/*
+
 	else {
 		Member * ptr = dynamic_cast<Member*>(this);
 		check = ptr -> display_reports();
 	}
+	return check;
+}
+
+=======
 */
 	return check;
 }
+
 int Person::display_provider_type() {
 
 	cout << "---------------WEEKLY REPORT--------------" << endl;
@@ -444,8 +510,6 @@ int Person::summary_report_check(int &total_providers, int &total_services, floa
 
 	return check; //Will return 0 if there are no reports for Provider
 }
-
-
 int Person::info_modify( string modify, int option)
 {
 	if (option == 1)
@@ -460,7 +524,6 @@ int Person::info_modify( string modify, int option)
 		return false;	
 	return true;	
 }
-
 
 //------------------------ Provider and Provider Report Functions ---------------------------
 
@@ -591,7 +654,68 @@ int Provider_Report::display() {
 	cout << "Service Fee: $" << fee << endl;
 	cout << endl;
 
+} 
+
+//--------------------- Member Functions ---------------------------
+
+Member_Report *& Member_Report::go_next(){
+	return next;
 }
+
+//Adds node to member report LLL
+int Member::add_report(Member_Report * to_add){
+
+	if(!report)
+		report = to_add;
+	else
+		add_to_end(to_add, this->report);
+}
+
+//Adds node to end of member report LLL
+int Member::add_to_end(Member_Report * to_add, Member_Report * current){
+	if(!current)
+		return 0;
+	else if(!current -> go_next())
+		current -> go_next() = to_add;
+	else
+		add_to_end(to_add, current -> go_next());
+	return 0;
+}
+
+int Member::write_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip, string & add_date, string &add_name, string &add_service) {
+
+	if(this -> report) {
+	add_member_name = this -> report -> get_mem_name();
+	add_member_code = this -> report -> get_code();
+	add_street = this -> report -> get_street();
+	add_city = this -> report -> get_city();
+	add_state = this -> report -> get_state();
+	add_zip = this -> report -> get_zip();
+  add_date = this -> report -> get_date();
+	add_name = this -> report -> get_name();
+	add_service = this -> report -> get_service();
+
+	return 1;
+	}
+	
+	return 0;
+}
+
+//Displays all reports for specific member
+int Member::display_reports() {
+	if(!report)
+		return 0;
+	else
+	{	
+		Member_Report * temp = report;
+
+		while(temp)
+		{
+			temp -> display_member();
+			temp = temp -> go_next();
+		}
+	}
+
 
 int Services()
 {
@@ -732,5 +856,15 @@ int state_checker(string state)
 	if (state.size() >3)
 		return false;
 	return true;
+
 }
 
+//Display of individual info for members
+void Member_Report::display_member() {
+	cout << "Member Name: " << member_name << endl;
+	cout << "Member Code: " << member_code << endl;
+	cout << "Member Address: " << street << " " << city << ", " << state << "  " << zip << endl << endl;
+  cout << "Date of Service: " << date_of_service << endl;
+	cout << "Provider Name: " << provider_name << endl;
+	cout << "Service Received: " << service_name << endl << endl;
+}
