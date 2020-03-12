@@ -52,14 +52,12 @@ public:
     int display1();
     int display2(Node * current);
     int find_hash(int code, Node *& current);
-    int display_personal_report(int code, int choice);
-    int display_all_reports();
+    int find_hash_previous(int code, Node *& current);
+    int display_personal_report(int code, int choice);	//Display all reports for a specific person
 
     //Functions regarding provider report below
     int add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee);
-    int display_reports(int provider_code); 
-    //int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
-    //int test_p_write(); //Test function for write_p_report
+    int display_p_reports(int provider_code);	
 
     //Functions regarding member report below
     int add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip);
@@ -68,10 +66,9 @@ public:
     //Functions regarding summary report below
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
-   
   
     int person_modify(string modify, int ID, int option);
-    int person_delete();
+    int person_delete(int ID);
 
 private:
     Node ** table;

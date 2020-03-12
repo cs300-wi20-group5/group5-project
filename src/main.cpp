@@ -13,7 +13,6 @@ int main()
 
 //  	data_base.files_read("../data/members.txt", 1);
  //   	data_base.files_read("../data/providers.txt", 2);
- 
 
 
   	data_base.files_read("../data/old_members.txt", 1);
@@ -77,7 +76,6 @@ int main()
 							if(manager_sub_action == 1)
 							{
 								//add new member
-
 								int new_member_ID;
 								string new_member_name;
 								Node * current;
@@ -256,8 +254,8 @@ int main()
 
 							if(manager_sub_action == 1)
 							{
-							//add new provider
 
+							//add new provider
 							int new_provider_ID;
 							string new_provider_name;
 							Node * current;
@@ -327,7 +325,6 @@ int main()
 								int mod_choice;
 								string mod_string;
 	
-
 								do
 								{
 									cout<<"Please enter the ID of the provider you wish to modify"<<endl;		
@@ -427,7 +424,6 @@ int main()
 
 		
 					}
-
 					
 					else if (manager_action == 3)
 					{
@@ -451,7 +447,7 @@ int main()
 						}while(valid_answer == 0);
 
 
-						data_base.display_reports(provider_ID);
+						data_base.display_p_reports(provider_ID);
 
 					}
 
@@ -670,7 +666,7 @@ int main()
 
 					else if (provider_action == 3)
 					{
-						data_base.display_reports(provider_ID);
+						data_base.display_p_reports(provider_ID);
 					}
 						
 					else

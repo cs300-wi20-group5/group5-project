@@ -1,8 +1,11 @@
 #include "classes.h"
-
 /*
 int main() {
     PeopleTable test;
+
+ 	test.files_read("../data/old_members.txt", 1);
+    	test.files_read("../data/old_providers.txt", 2);
+	test.display1();	
 
     //Below I am testing if adding provider reports works
 
@@ -25,7 +28,6 @@ int main() {
     serv_code = 654321;
     fee = 72.50;
 
-
     test.add_provider_report(provider_code,date,time,mem_name,mem_code,serv_code,fee);
 
     date = "2/22/2020";
@@ -37,10 +39,15 @@ int main() {
   
     test.add_provider_report(309123411,date,time,mem_name,mem_code,serv_code,fee);
 
-    test.display_reports(provider_code);
-    test.display_reports(309123411);
+    //test.display_p_reports(provider_code);
+    //test.display_p_reports(309123411);
     
     test.summary_report();
+    test.person_delete(309123411);
+    test.person_delete(provider_code);
+    
+    test.summary_report();
+    test.display1();
 
     test.files_read("../data/members.txt", 1);
     test.files_read("../data/providers.txt", 2);
@@ -146,7 +153,6 @@ void PeopleTable::files_write_MP(string fileName, int dataType) {
     file1.close(); 
 }
 
-
 // Function that loops through hash table to find all reports, when it finds a valid provider, 
 // it goes down into the provider and writes all reports to file
 void PeopleTable::files_write_PR(string fileName) {
@@ -165,62 +171,6 @@ void PeopleTable::files_write_PR(string fileName) {
 	}
 	file1.close();
 }
-
-/*
-//Thomas call this function in a for-loop that traverses the entire hashtable
-//Once a pointer is pointed to a node, call this function to get back data by reference
-int PeopleTable::write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
-
-	if(!current)
-		return 0;
-
-	//All 9-digit provider codes start with 3, isolating those codes
-	int id = current -> data -> get_id();
-	id = id%300000000;
-
-	if(id < 200000000) {
-		int check = current -> data -> write_p_report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
-
-		return check;
-	}
-
-	return 0;
-	
-}
-
-int PeopleTable::test_p_write() {
-
-	string adate;
-	string atime;
-	string aname;
-	int amemcode;
-	int aservcode;
-	float afee;
-
-	Node * current;
-	for(int i = 0; i < 23; ++i) {
-
-		current = table[i];	
-
-		while(current) {
-		int check = write_p_report(current, adate, atime, aname, amemcode, aservcode, afee);
-
-			if(check == 1) {
-				cout << "--------TESTING PROVIDE WRITE BACK FUNCTION---------" << endl;
-				cout << "Date of Service: " << adate << endl;
-				cout << "Time: " << atime << endl;
-				cout << "Member Name: " << aname << endl;
-				cout << "Member Code: " << amemcode << endl;
-				cout << "Service Code: " << aservcode << endl;
-				cout << "Service Fee: $" << afee << endl;
-				cout << endl;
-
-			}
-			current = current -> next;
-		}
-	}
-}
-*/ 
 
 int PeopleTable::hash_function(int id) {
     return id % 23;
@@ -290,6 +240,40 @@ int PeopleTable::find_hash(int code, Node *& current) {
 
 }
 
+//Used to find node before the node with the key, used for deletion
+int PeopleTable::find_hash_previous(int code, Node *& current) {
+
+	int flag = 0;
+	int bucket = hash_function(code); 
+	current = table[bucket];
+
+	if(!current -> next) {
+		int id = current -> data -> get_id();
+		
+		if(code == id)
+			return 1;
+		else return 0;
+	}
+
+	do{
+		int id = current -> next -> data -> get_id();
+		if(code == id)	{
+			flag = 2;
+		}
+		else
+			current = current -> next;
+
+	}while(flag != 2 && current->next);
+
+	//when id is not found returns 0
+	if(flag != 2)
+		return 0;	
+	else
+		return 2;
+
+}
+
+
 //Adds provider report once all information has been recorded
 int PeopleTable::add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee)	{
 
@@ -324,7 +308,7 @@ int PeopleTable::display_personal_report(int code, int choice) {
 }
 
 //Display provider reports based on provider code
-int PeopleTable::display_reports(int provider_code) {
+int PeopleTable::display_p_reports(int provider_code) {
 
 	int flag = 0;
 	Node * current;
@@ -345,7 +329,8 @@ int PeopleTable::summary_report() {
 
 	//These variables will be passed by reference to other function calls
 	//The other functions will save their values into these variables
-	int total_providers, total_services = 0;
+	int total_providers = 0;
+	int total_services = 0;
 	float total_fees = 0;
 
 	cout << "-------------SUMMARY REPORT---------------" << endl;
@@ -361,7 +346,6 @@ int PeopleTable::summary_report() {
 	cout << endl;
 
 }
-
 
 //Recursive function for displaying the summary report
 int PeopleTable::summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees) {
@@ -426,6 +410,29 @@ int PeopleTable::person_modify (string modify, int ID,int option)
 		return temp-> data ->info_modify(modify, option);	
 	return true;
 } 
+
+//For manager terminal, deletes personal information
+int PeopleTable::person_delete(int ID) {
+
+	Node * current;
+	Node * temp;
+	int flag = find_hash_previous(ID, current);
+
+	if(flag == 0)
+		return 0;
+	else if(flag == 1) {
+		temp = current;
+		current = NULL;
+		delete temp;
+	}	
+	else {
+		temp = current -> next;
+		current -> next = temp -> next;
+		delete temp;
+		temp = NULL;
+	}
+
+}
 
 //----------------------------------- Person Functions -------------------------------------
 //The functions below use dynamic_cast to convert Person* into Provider*
