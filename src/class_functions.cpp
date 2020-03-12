@@ -166,6 +166,7 @@ void PeopleTable::files_write_PR(string fileName) {
 	file1.close();
 }
 
+/*
 //Thomas call this function in a for-loop that traverses the entire hashtable
 //Once a pointer is pointed to a node, call this function to get back data by reference
 int PeopleTable::write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
@@ -219,7 +220,8 @@ int PeopleTable::test_p_write() {
 		}
 	}
 }
-    
+*/ 
+
 int PeopleTable::hash_function(int id) {
     return id % 23;
 }
@@ -288,6 +290,7 @@ int PeopleTable::find_hash(int code, Node *& current) {
 
 }
 
+//Adds provider report once all information has been recorded
 int PeopleTable::add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee)	{
 
 	int flag = 0;
@@ -307,6 +310,7 @@ int PeopleTable::add_provider_report(int provider_code, string add_date, string 
 
 }
 
+//Displays all reports of a specific person based on code. Choice is for either provider or member
 int PeopleTable::display_personal_report(int code, int choice) {
 
 	int flag = 0;
@@ -319,6 +323,7 @@ int PeopleTable::display_personal_report(int code, int choice) {
 	current -> data -> display_personal_type(choice);
 }
 
+//Display provider reports based on provider code
 int PeopleTable::display_reports(int provider_code) {
 
 	int flag = 0;
@@ -335,6 +340,7 @@ int PeopleTable::display_reports(int provider_code) {
 
 }
 
+//Wrapper function for displaying the summary report
 int PeopleTable::summary_report() {
 
 	//These variables will be passed by reference to other function calls
@@ -356,6 +362,8 @@ int PeopleTable::summary_report() {
 
 }
 
+
+//Recursive function for displaying the summary report
 int PeopleTable::summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees) {
 	if(!current)
 		return 0;
@@ -375,7 +383,7 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 
 }
 
-
+//Adds member reports based on member code
 int PeopleTable::add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip) {
 	int flag = 0;
 	Node * current;
@@ -393,6 +401,7 @@ int PeopleTable::add_m_report(int member_code, string new_date, string new_name,
 	return 1;
 }
 
+//Display member reports based on member code
 int PeopleTable::display_m_reports(int member_code) {
   int flag = 0;
 	Node * current;
@@ -407,6 +416,7 @@ int PeopleTable::display_m_reports(int member_code) {
 	return 1;
 }
 
+//For manager terminal, modifies personal information
 int PeopleTable::person_modify (string modify, int ID,int option)
 {
 	Node * temp;
@@ -468,17 +478,10 @@ int Person::display_personal_type(int choice) {
 		check = ptr -> display_reports();
 	}
 
-	/*
-
 	else {
 		Member * ptr = dynamic_cast<Member*>(this);
 		check = ptr -> display_reports();
 	}
-	return check;
-}
-
-=======
-*/
 	return check;
 }
 

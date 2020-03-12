@@ -37,6 +37,7 @@ public:
     } */
 
 
+    //Functions regarding file i/o below
     int files_read(string fileName, int dataType);
     void files_read_MP(string fileName, int dataType);
     void files_read_PR(string fileName);
@@ -44,6 +45,7 @@ public:
     void files_write_MP(string fileName, int dataType);
     void files_write_PR(string fileName);    
 
+    //Functions regarding hash table and general display below
     int hash_function(int id);
     int add_node(Node * to_add, int hash);
     int add_to_end(Node * to_add, Node * current);
@@ -51,21 +53,25 @@ public:
     int display2(Node * current);
     int find_hash(int code, Node *& current);
     int display_personal_report(int code, int choice);
+    int display_all_reports();
 
     //Functions regarding provider report below
     int add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee);
     int display_reports(int provider_code); 
-    int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
-    int test_p_write(); //Test function for write_p_report
+    //int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
+    //int test_p_write(); //Test function for write_p_report
 
     //Functions regarding member report below
     int add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip);
     int display_m_reports(int member_code);
-    
+   
+    //Functions regarding summary report below
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
-    
+   
+  
     int person_modify(string modify, int ID, int option);
+    int person_delete();
 
 private:
     Node ** table;
@@ -112,8 +118,6 @@ public:
 	
       //modifies any person data type that is a string type
     int info_modify(string modify, int option);
-    //modifies any person data type that is an int type
-    //int info_modify2(int modify, int option);
 
 
 protected:
@@ -258,5 +262,3 @@ int new_user_id_checker( int id);
 int street_address_checker( string street_address);
 int city_checker( string city);
 int state_checker(string state);
-//Hello this me testing
-//Still testing
