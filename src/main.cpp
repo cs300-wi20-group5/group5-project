@@ -557,7 +557,7 @@ int main()
 						Node * current;	
 						do
 						{
-							cout<<"Please enter your provider ID number"<<endl;
+							cout<<"Please enter your provider ID code"<<endl;
 							cin>>provider_IDD;
 							cin.ignore();
 							if (data_base.find_hash(provider_IDD,current) == 0)
@@ -571,7 +571,7 @@ int main()
 
 						do
 						{
-							cout<<"Please enter the members ID number:"<<endl;
+							cout<<"Please enter the member ID code:"<<endl;
 							cin>>member_IDD;
 							cin.ignore();
 							if(data_base.find_hash(member_IDD,current) == 0)
@@ -623,6 +623,9 @@ int main()
 						{
 							cout<<"Please enter the member's name"<<endl;
 							getline(cin, member_name);
+							valid_answer = 1;
+
+							/*
 							if (name_size_checker (member_name) == 0 || member_name.compare(current -> data -> get_name()))
 							{
 								valid_answer = 0;
@@ -630,6 +633,8 @@ int main()
 							}
 							else
 								valid_answer = 1;
+							*/
+
 						}while(valid_answer == 0);
 
 						do
