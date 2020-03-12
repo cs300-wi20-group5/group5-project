@@ -65,10 +65,6 @@ public:
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
     
-
-    int summary_report();
-    int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
-
     int person_modify(string modify, int ID, int option);
 
 private:
