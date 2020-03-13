@@ -692,6 +692,5 @@ int main()
 
 	} while (response != 0 && response != 1);
 
-
 	return 0;
 }
