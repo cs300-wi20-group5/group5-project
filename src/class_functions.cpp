@@ -727,7 +727,7 @@ int Member::display_reports() {
 }
 
 int Services() {
-        string services[] = {"Yoga\nIntense stretches.\n$99.99\n100001\n\n", "Therapy talk\nTalking with a doctor about your problem.\n$50.50\n100002\n\n","Detoxification of chocolate\nWhere they remove chocolate from your home.\n$499.99\n100003\n\n","Short-term residential treatment\nStay at the facility for a week,getting prepared for long term counseling.\n$900.00\n100004\n\n","Recovery sessions\nBeing supervise when being around chocolate. This is for long term customers.\n$850.66\n100005\n\n","Meditation\nLearn what meditating is and how it can be use to get over your addiction.\n$110.00\n100006\n\n","Find a substitution\nDoctor will help you find something to get your mind off of chocolate.\n$45.50\n100007\n\n"};
+        string services[] = {"Archery Yoga\nIntense stretches mixed with archery.\n$99.99\n100001\n\n", "Concerning Therapy Talk\nTalking with a doctor about your problem.\n$50.50\n100002\n\n","Detoxification of Chocolate\nWhere they remove chocolate from your home.\n$499.99\n100003\n\n","Residential Treatment\nStay at the facility for a week,getting prepared for long term counseling.\n$900.00\n100004\n\n","Recovery Sessions\nBeing supervise when being around chocolate. This is for long term customers.\n$850.66\n100005\n\n","Terrific Meditation\nLearn what meditating is and how it can be use to get over your addiction.\n$110.00\n100006\n\n","Will Find a Substitution\nDoctor will help you find something to get your mind off of chocolate.\n$45.50\n100007\n\n"};
 
 	cout << "-------------------PROVIDER DIRECTORY--------------------" << endl;
         for(int i =0;i<7;++i)
