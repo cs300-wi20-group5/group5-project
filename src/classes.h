@@ -1,6 +1,4 @@
 //
-// Created by Aryeh Kempler-Delugach on 2/10/20.
-//
 #include <fstream>
 #include <iostream>
 #include <cctype>
@@ -20,23 +18,9 @@ public:
         table = new Node * [23];
         for(int i = 0; i < 23; ++i) {table[i] = nullptr;}
     }
-    /*
-    ~PeopleTable() {
-	for(int i = 0; i < 23; ++i) {
-		Node * tmp;
-		while(this->table[i]->next) {
-			tmp = this->table[i]->next;
-			delete this->table[i];
-			this->table[i] = tmp;
-		}
-		if(!this->table[i]->next) {
-			delete this->table[i];
-			this->table[i] = nullptr;
-		}
-	}
-    } */
+    ~PeopleTable();
 
-
+    //Functions regarding file i/o below
     int files_read(string fileName, int dataType);
     void files_read_MP(string fileName, int dataType);
     void files_read_PR(string fileName);
@@ -44,24 +28,30 @@ public:
     void files_write_MP(string fileName, int dataType);
     void files_write_PR(string fileName);    
 
+    //Functions regarding hash table and general display below
     int hash_function(int id);
     int add_node(Node * to_add, int hash);
     int add_to_end(Node * to_add, Node * current);
     int display1();
     int display2(Node * current);
     int find_hash(int code, Node *& current);
-    int display_personal_report(int code, int choice);
+    int find_hash_previous(int code, Node *& current);
+    int display_personal_report(int code, int choice);	//Display all reports for a specific person
 
     //Functions regarding provider report below
     int add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee);
-    int display_reports(int provider_code); 
-    int write_p_report(Node * current, string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
-    int test_p_write(); //Test function for write_p_report
+    int display_p_reports(int provider_code);	
 
+    //Functions regarding member report below
+    int add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip);
+    int display_m_reports(int member_code);
+   
+    //Functions regarding summary report below
     int summary_report();
     int summary_report_internal(Node * current, int &total_providers, int &total_services, float &total_fees);
-
+  
     int person_modify(string modify, int ID, int option);
+    int person_delete(int ID);
 
 private:
     Node ** table;
@@ -99,13 +89,15 @@ public:
     int display_personal_type(int choice);
     int summary_report_check(int &total_providers, int &total_services, float &total_fees);
     int write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
-
+  
+    //Functions below are wrapper functions to convert Person* to Member*
+    int add_member_type(Member_Report * to_add);
+    int display_member_type();
+    
     void wrapperFW(ofstream & file1);
 	
       //modifies any person data type that is a string type
     int info_modify(string modify, int option);
-    //modifies any person data type that is an int type
-    //int info_modify2(int modify, int option);
 
 
 protected:
@@ -116,11 +108,17 @@ protected:
 
 class Member: public Person {
 public:
+
     Member(int a, string b) : Person(a, 1, b) {
+
     }
 
 
     //Need function to add member reports
+    int add_report(Member_Report * to_add);
+    int add_to_end(Member_Report * to_add, Member_Report * current);
+    int display_reports();
+    int write_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip, string & add_date, string &add_name, string &add_service);
     
 private:
     Member_Report * report;
@@ -129,7 +127,9 @@ private:
 
 class Provider: public Person {
 public:
+
     Provider(int a, string b) : Person(a, 2, b) {
+
 	    report = nullptr;
     }
 
@@ -141,6 +141,7 @@ public:
     int write_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee);
 
     void fileWrite(ofstream & file1);
+
 private:
     Provider_Report * report;
 
@@ -149,24 +150,64 @@ private:
 //Below report classes will act as nodes to form the reports
 class Member_Report {
 public:
-	Member_Report(string new_date, string new_name, string new_service)
+	Member_Report(string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip)
 	{
 		date_of_service = new_date;
 		provider_name = new_name;
 		service_name = new_service;
+		member_name = new_memname;
+		member_code = new_memcode;
+		street = new_street;
+		city = new_city;
+		state = new_state;
+		zip = new_zip;
+
+		next = nullptr;
+	}
+	~Member_Report() {
+
+		date_of_service = "";
+		provider_name = "";
+		service_name = "";
+		member_name = "";
+		member_code = 0;
+		street = "";
+		city = "";
+		state = "";
+		zip = 0;
 
 		next = nullptr;
 	}
 
-//Functions involving the member report will go below
+	//Functions involving the member report will go below
+	string get_date() {return this->date_of_service;};
+	string get_name() {return this->provider_name;};
+	string get_service() {return this->service_name;};
+	string get_mem_name() {return this->member_name;};
+	int get_code() {return this->member_code;};
+	string get_street() {return this->street;};
+	string get_city() {return this->city;};
+	string get_state() {return this->state;};
+	int get_zip() {return this->zip;};
+
+
+	Member_Report *& go_next();
+	void display_member();
 
 private:
 	Member_Report * next;
 
 	string date_of_service;
 	string provider_name;
+	string member_name;
 	string service_name;
+	int member_code;
+	string street;
+	string city;
+	string state;
+	int zip;
 };
+
 
 class Provider_Report {
 public:
@@ -178,6 +219,17 @@ public:
 		member_code = new_memcode;
 		service_code = new_servcode;
 		fee = new_fee;
+		
+		next = nullptr;
+	}
+	~Provider_Report() {
+
+		date_of_service = "";
+		time = "";
+		member_name = "";
+		member_code = 0;
+		service_code = 0;
+		fee = 0.0;
 		
 		next = nullptr;
 	}
@@ -203,9 +255,6 @@ private:
    	int service_code;
    	float fee;
 };
-
-
-
 
 int Services();
 
