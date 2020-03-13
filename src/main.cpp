@@ -1,6 +1,5 @@
 using namespace std;
 #include "classes.h"
-//#include <cstring>
 #include <string>
 
 int main()
@@ -574,22 +573,7 @@ int main()
 						cout<<endl;
 						Services();
 						cout<<endl;
-/*
-						do
-						{
-							cout<<"Please enter your provider ID code"<<endl;
-							cin>>provider_IDD;
-							cin.ignore();
-							if (data_base.find_hash(provider_IDD,current) == 0)
-							{
-								valid_answer = 0;
-								cout<<"Invalid ID, please try again"<<endl<<endl;
-							}
-							else
-								valid_answer = 1;
-						}while(valid_answer == 0);
 
-*/
 						do
 						{
 							cout<<"Please enter the member ID code:"<<endl;
@@ -708,31 +692,6 @@ int main()
 
 	} while (response != 0 && response != 1);
 
-       	cout<<endl<<endl<<endl;	
-	data_base.display1();	
 
 	return 0;
 }
-/*
-	
-	Provider * provider_object= new Provider(123456,"billy");
-
-	cout<<provider_object->Provider::get_id()<<endl;
-
-	PeopleTable hash_table;
-
-//	hash_table.files_read();
-
-	
-	int new_id = hash_table.hash_function(provider_object->Provider::get_id());
-
-	cout<<new_id<<endl;
-
-
-	Node * entry = new Node(provider_object);
-
-	cout<<hash_table.add_node(entry,new_id)<<endl;
-	hash_table.display1();
-	cout<<endl;
-	
-*/
