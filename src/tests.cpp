@@ -1,10 +1,15 @@
 //
 // Created by Aryeh Kempler-Delugach on 3/13/20.
 //
-/*
 #include "classes.h"
 #include <assert.h>     // assert
 
+/*
+	The unit tests were functional and we were able to test our units. 
+	However, minor last minute changes with the assert.h library caused some errors
+
+*/
+/*
 //add these to the class
 int run_tests();
 int check_table();
