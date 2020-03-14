@@ -253,8 +253,8 @@ int PeopleTable::find_hash(int code, Node *& current) {
 		return 0;	
 	else
 		return 1;
-
 }
+
 
 //Used to find node before the node with the key, used for deletion
 int PeopleTable::find_hash_previous(int code, Node *& current) {

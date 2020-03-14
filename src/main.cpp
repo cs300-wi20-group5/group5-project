@@ -14,14 +14,8 @@ int main()
   	data_base.files_read("../data/members.txt", 1);
     	data_base.files_read("../data/providers.txt", 2);
 	data_base.files_read("../data/p_reports.txt", 3);
-	// data_base.files_read("../data/m_reports.txt", 4); 
+	data_base.files_read("../data/m_reports.txt", 4); 
 	
-	int retVal = data_base.display_p_reports(385773619);
-	
-	cout << retVal << endl;
-   
-	data_base.display1();	
-
 	int provider_ID;
 	int manager_ID;
 	
@@ -563,8 +557,11 @@ int main()
 				cout << "Example Code: 309123411" <<endl;
 				cin>>provider_ID;
 				cin.ignore();
+				
+				int foundData = data_base.find_hash(provider_ID, current);
+				int type = current->data->get_type();
 
-				if (data_base.find_hash(provider_ID,current) == 0)
+				if (foundData == 0 || type == 1)
 				{
 					valid_answer = 0;
 					cout<<"Invalid ID, please try again"<<endl<<endl;
@@ -739,9 +736,10 @@ int main()
 
 	} while (response != 0 && response != 1);
 	
-	data_base.files_write("../data/members_test_1.txt",1);
-	data_base.files_write("../data/providers_test_1.txt",2);
-	data_base.files_write("../data/provider_reports_test_1.txt",3);
+	data_base.files_write("../data/members.txt",1);
+	data_base.files_write("../data/providers.txt",2);
+	data_base.files_write("../data/p_reports.txt",3);
+	data_base.files_write("../data/m_reports.txt",4);
 
 	return 0;
 }
