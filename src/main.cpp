@@ -10,17 +10,12 @@ int main()
 	Member * member_user;
 	PeopleTable data_base;
 
-//  	data_base.files_read("../data/members.txt", 1);
- //   	data_base.files_read("../data/providers.txt", 2);
 
-
-  	data_base.files_read("../data/old_members.txt", 1);
-    	data_base.files_read("../data/old_providers.txt", 2);
- 
-
-   
-	data_base.display1();	
-
+  	data_base.files_read("../data/members.txt", 1);
+    	data_base.files_read("../data/providers.txt", 2);
+	data_base.files_read("../data/p_reports.txt", 3);
+	data_base.files_read("../data/m_reports.txt", 4); 
+	
 	int provider_ID;
 	int manager_ID;
 	
@@ -84,13 +79,13 @@ int main()
 							if(manager_sub_action == 1)
 							{
 								//add new member
-								int new_member_ID;
-								string new_member_name;
+								int new_member_ID, new_zip;
+								string new_member_name, new_address, new_city, new_state;
 								Node * current;
 
 								cout<<"\nPlease enter the new members name"<<endl;
 								getline(cin,new_member_name);
-								
+
 
 								do
 								{
@@ -106,7 +101,19 @@ int main()
 										valid_answer = 1;
 								}while (valid_answer == 0);
 
-								member_user= new Member(new_member_ID,new_member_name);
+								cout << "Enter the member's address:\n";
+								getline(cin, new_address);
+
+								cout << "Enter the city they live in:\n";
+								getline(cin, new_city);
+
+								cout << "Enter the state they live in:\n";
+								getline(cin, new_state);
+
+								cout << "Enter their zip code:\n";
+								cin >> new_zip;
+
+								member_user= new Member(new_member_ID, new_member_name, new_address, new_city, new_state, new_zip);
 
 								int hashed_ID=data_base.hash_function(member_user->Member::get_id());
 
@@ -145,7 +152,7 @@ int main()
 							else if (manager_sub_action == 3)
 							{
 
-							//modify current members info
+								//modify current members info
 								int member_ID;
 								Node * current;
 								int mod_choice;
@@ -171,6 +178,7 @@ int main()
 									cout<<"-Street Address (enter 2)"<<endl;
 									cout<<"-City (enter 3)"<<endl;
 									cout<<"-State (enter 4)"<<endl;
+									cout << "-Zip (enter 5)" << endl;
 									cin>>mod_choice;
 									cin.ignore();
 
@@ -239,13 +247,25 @@ int main()
 										else
 											data_base.person_modify(mod_string,member_ID,mod_choice); 
 									}
+									else if (mod_choice == 5)
+									{
+										cout<<"Please enter the new zip code you'd like to change to"<<endl;
+										getline(cin,mod_string);
+										if (state_checker(mod_string) ==0)
+										{
+											cout<<"invalid size, please try again"<<endl;
+											mod_choice = 0;
+										}
+										else
+											data_base.person_modify(mod_string,member_ID,mod_choice); 
+									}
 									else
 										cout<<"\nInvalid modify option, please try again"<<endl
 											<<"Note: choose an option from 1 - 4"<<endl;
 
 								} while (mod_choice <1 || mod_choice >4);
-							
-							
+
+
 							}
 							else
 							{
@@ -264,17 +284,17 @@ int main()
 							cout<<"-Add a new Provider account (enter 1)"<<endl;
 							cout<<"-Delete a current Provider (enter 2)"<<endl;
 							cout<<"-Modify a current Providers information (enter 3)"<<endl;
-							
+
 							cin>>manager_sub_action;
 							cin.ignore();
 
 							if(manager_sub_action == 1)
 							{
 
-							//add new provider
-							int new_provider_ID;
-							string new_provider_name;
-							Node * current;
+								//add new provider
+								int new_provider_ID, new_zip;
+								string new_provider_name, new_address, new_city, new_state;
+								Node * current;
 
 							cout<<"\nPlease enter the new Providers name"<<endl;
 							getline(cin,new_provider_name);
@@ -285,24 +305,41 @@ int main()
 								cin>>new_provider_ID;
 								cin.ignore();
 								if (new_user_id_checker(new_provider_ID) == 0 || data_base.find_hash(new_provider_ID,current))
+
 								{
-									valid_answer = 0;
-									cout<<"ID either exists already or is not 9 digits, please try again"<<endl<<endl;
-								}
-								else
-									valid_answer = 1;
-							}while (valid_answer == 0);
+									cout<<"Please enter the new providers nonexistent 9 digit ID"<<endl;
+									cin>>new_provider_ID;
+									cin.ignore();
+									if (new_user_id_checker(new_provider_ID) == 0 || data_base.find_hash(new_provider_ID,current))
+									{
+										valid_answer = 0;
+										cout<<"ID either exists already or is not 9 digits, please try again"<<endl<<endl;
+									}
+									else
+										valid_answer = 1;
+								}while (valid_answer == 0);
+
+								cout << "Enter their address:\n";
+								getline(cin, new_address);
+
+								cout << "Enter their city:\n";
+								getline(cin, new_city);
+
+								cout << "Enter their state:\n";
+								getline(cin, new_state);
+
+								cout << "Enter their zip code:\n";
+								cin >> new_zip;
 
 
-							
-							provider_user= new Provider(new_provider_ID,new_provider_name);
+								provider_user= new Provider(new_provider_ID,new_provider_name,new_address,new_city,new_state,new_zip);
 
-							int hashed_ID=data_base.hash_function(provider_user->Provider::get_id());
+								int hashed_ID=data_base.hash_function(provider_user->Provider::get_id());
 
 
-							Node * entry = new Node(provider_user);
+								Node * entry = new Node(provider_user);
 
-							data_base.add_node(entry,hashed_ID);
+								data_base.add_node(entry,hashed_ID);
 
 
 
@@ -310,7 +347,7 @@ int main()
 							else if(manager_sub_action == 2)
 							{
 								//delete current provider
-								
+
 								int provider_deleting;	
 								Node*current;
 
@@ -335,12 +372,12 @@ int main()
 
 							else if (manager_sub_action == 3)
 							{
-							//modify current providers info
+								//modify current providers info
 								int provider_ID;	
 								Node*current;
 								int mod_choice;
 								string mod_string;
-	
+
 								do
 								{
 									cout<<"\nPlease enter the ID of the provider you wish to modify"<<endl;		
@@ -444,9 +481,9 @@ int main()
 						}while (manager_sub_action < 1 || manager_sub_action > 3);
 
 
-		
+
 					}
-					
+
 					else if (manager_action == 3)
 					{
 
@@ -474,7 +511,7 @@ int main()
 					}
 
 
-	
+
 					else if (manager_action == 4)
 					{
 
@@ -536,8 +573,12 @@ int main()
 				cout << "Example Code: 309123411" <<endl;
 				cin>>provider_ID;
 				cin.ignore();
+				
+				int foundData = data_base.find_hash(provider_ID, current);
+				int type = current->data->get_type();
 
-				if (data_base.find_hash(provider_ID,temp) == 0)
+				if (foundData == 0 || type == 1)
+
 				{
 					valid_answer = 0;
 					cout<<"\nInvalid provider ID, please try again"<<endl<<endl;
@@ -570,14 +611,11 @@ int main()
 					else if (provider_action == 2)
 					{
 						//Bill Choc An
-						string date;
-						string time;
-						string member_name;
-						int member_IDD;
-						int service_code;
+						string date, time, member_name, comments;
+						int member_IDD, service_code, provider_IDD;
 						float service_fee;
-						string service_name;
-						int provider_IDD;
+
+
 						Node * current;	
 
 						//Displays provider directory
@@ -645,7 +683,21 @@ int main()
 								valid_answer = 1;
 
 						}while(valid_answer == 0);
+								
+						do
+						{
+							cout<<"Please enter any comments you have (if you dont have any, just write 'none'):"<<endl;
+							getline(cin, comments);
 
+							if(!comment_checker)
+							{
+								valid_answer = 0;
+								cout << "Error: Either entered too big of a comment or didn't enter anything, please try again" << endl;
+							}
+							else
+								valid_answer = 1;
+						}while(valid_answer ==0);
+						
 						do
 						{
 							cout<<"\nPlease enter the service code"<<endl;
@@ -695,11 +747,10 @@ int main()
 						string city = "Hillsboro";
 						string state = "OR";
 						int zip = 97213;
-						data_base.add_provider_report(provider_ID,date,time,member_name,member_IDD,service_code,service_fee);
+						data_base.add_provider_report(provider_ID,date,time,member_name,comments,member_IDD,service_code,service_fee);
 						data_base.add_m_report(member_IDD,date,temp->data->get_name(),service_name,current->data->get_name(),member_IDD,street,city,state,zip);
 
 						//data_base.display_personal_report(member_IDD,2);
-
 
 					}
 
@@ -731,7 +782,12 @@ int main()
 		}
 
 	} while (response != 0 && response != 1);
-//	data_base.display1();
+	
+	data_base.files_write("../data/members.txt",1);
+	data_base.files_write("../data/providers.txt",2);
+	data_base.files_write("../data/p_reports.txt",3);
+	data_base.files_write("../data/m_reports.txt",4);
+
 
 	return 0;
 }
