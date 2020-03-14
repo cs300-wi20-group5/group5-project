@@ -296,54 +296,51 @@ int main()
 								string new_provider_name, new_address, new_city, new_state;
 								Node * current;
 
-							cout<<"\nPlease enter the new Providers name"<<endl;
-							getline(cin,new_provider_name);
+								cout<<"\nPlease enter the new Providers name"<<endl;
+								getline(cin,new_provider_name);
 
-							do
-							{
-								cout<<"\nPlease enter the new providers nonexistent 9 digit ID"<<endl;
-								cin>>new_provider_ID;
-								cin.ignore();
-								if (new_user_id_checker(new_provider_ID) == 0 || data_base.find_hash(new_provider_ID,current))
-
+								do
 								{
-									cout<<"Please enter the new providers nonexistent 9 digit ID"<<endl;
+									cout<<"\nPlease enter the new providers nonexistent 9 digit ID"<<endl;
 									cin>>new_provider_ID;
 									cin.ignore();
+
 									if (new_user_id_checker(new_provider_ID) == 0 || data_base.find_hash(new_provider_ID,current))
 									{
-										valid_answer = 0;
-										cout<<"ID either exists already or is not 9 digits, please try again"<<endl<<endl;
+										cout<<"Please enter the new providers nonexistent 9 digit ID"<<endl;
+										cin>>new_provider_ID;
+										cin.ignore();
+											valid_answer = 0;
+											cout<<"ID either exists already or is not 9 digits, please try again"<<endl<<endl;
 									}
 									else
 										valid_answer = 1;
-								}while (valid_answer == 0);
+								} while (valid_answer == 0);
 
-								cout << "Enter their address:\n";
-								getline(cin, new_address);
+									cout << "Enter their address:\n";
+									getline(cin, new_address);
 
-								cout << "Enter their city:\n";
-								getline(cin, new_city);
+									cout << "Enter their city:\n";
+									getline(cin, new_city);
 
-								cout << "Enter their state:\n";
-								getline(cin, new_state);
+									cout << "Enter their state:\n";
+									getline(cin, new_state);
 
-								cout << "Enter their zip code:\n";
-								cin >> new_zip;
-
-
-								provider_user= new Provider(new_provider_ID,new_provider_name,new_address,new_city,new_state,new_zip);
-
-								int hashed_ID=data_base.hash_function(provider_user->Provider::get_id());
+									cout << "Enter their zip code:\n";
+									cin >> new_zip;
+									cin.ignore(100, '\n');
 
 
-								Node * entry = new Node(provider_user);
+									provider_user= new Provider(new_provider_ID,new_provider_name,new_address,new_city,new_state,new_zip);
 
-								data_base.add_node(entry,hashed_ID);
+									int hashed_ID=data_base.hash_function(provider_user->Provider::get_id());
+
+									Node * entry = new Node(provider_user);
+
+									data_base.add_node(entry,hashed_ID);
 
 
-
-							}
+								}
 							else if(manager_sub_action == 2)
 							{
 								//delete current provider
@@ -565,7 +562,7 @@ int main()
 			int provider_code = 0;
 			int provider_action = 0;
 			int provider_repeat = 0;
-			Node*temp;	
+			Node * temp;	
 
 			do
 			{
@@ -574,8 +571,8 @@ int main()
 				cin>>provider_ID;
 				cin.ignore();
 				
-				int foundData = data_base.find_hash(provider_ID, current);
-				int type = current->data->get_type();
+				int foundData = data_base.find_hash(provider_ID, temp);
+				int type = temp->data->get_type();
 
 				if (foundData == 0 || type == 1)
 
@@ -611,7 +608,7 @@ int main()
 					else if (provider_action == 2)
 					{
 						//Bill Choc An
-						string date, time, member_name, comments;
+						string date, time, member_name, comments, service_name;
 						int member_IDD, service_code, provider_IDD;
 						float service_fee;
 
@@ -728,27 +725,23 @@ int main()
 								valid_answer = 1;
 						}while (valid_answer == 0);
 					
-				//		do
-				//		{
+						do
+						{
 							cout<<"\nPlease enter the service name"<<endl;
 							getline(cin,service_name);
-							//if (service_fee_checker (service_fee) == 0)
-						//	{
-						//		valid_answer = 0;
-						//		cout<<"\nInvalid service fee, please try again"<<endl
-						//			<<"Note: Service fees must be up to 999.99"<<endl;
-						//	}
-						//	else
-						//		valid_answer = 1;
-				//		}while (valid_answer == 0);
+							if (service_fee_checker (service_fee) == 0)
+							{
+								valid_answer = 0;
+								cout<<"\nInvalid service fee, please try again"<<endl
+									<<"Note: Service fees must be up to 999.99"<<endl;
+							}
+							else
+								valid_answer = 1;
+						}while (valid_answer == 0);
 
 
-						string street = "century";
-						string city = "Hillsboro";
-						string state = "OR";
-						int zip = 97213;
 						data_base.add_provider_report(provider_ID,date,time,member_name,comments,member_IDD,service_code,service_fee);
-						data_base.add_m_report(member_IDD,date,temp->data->get_name(),service_name,current->data->get_name(),member_IDD,street,city,state,zip);
+						data_base.add_m_report(member_IDD,date,temp->data->get_name(),service_name,current->data->get_name(),member_IDD);
 
 						//data_base.display_personal_report(member_IDD,2);
 

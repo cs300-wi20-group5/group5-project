@@ -180,10 +180,6 @@ public:
 		service_name = "";
 		member_name = "";
 		member_code = 0;
-		street = "";
-		city = "";
-		state = "";
-		zip = 0;
 
 		next = nullptr;
 	}
