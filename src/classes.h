@@ -1,6 +1,4 @@
 //
-// Created by Aryeh Kempler-Delugach on 2/10/20.
-//
 #include <fstream>
 #include <iostream>
 #include <cctype>
@@ -20,22 +18,7 @@ public:
         table = new Node * [23];
         for(int i = 0; i < 23; ++i) {table[i] = nullptr;}
     }
-    /*
-    ~PeopleTable() {
-	for(int i = 0; i < 23; ++i) {
-		Node * tmp;
-		while(this->table[i]->next) {
-			tmp = this->table[i]->next;
-			delete this->table[i];
-			this->table[i] = tmp;
-		}
-		if(!this->table[i]->next) {
-			delete this->table[i];
-			this->table[i] = nullptr;
-		}
-	}
-    } */
-
+    ~PeopleTable();
 
     //Functions regarding file i/o below
     int files_read(string fileName, int dataType);
@@ -189,7 +172,22 @@ public:
 		member_code = new_memcode;
 
 		next = nullptr;
-	} 
+	}
+	~Member_Report() {
+
+		date_of_service = "";
+		provider_name = "";
+		service_name = "";
+		member_name = "";
+		member_code = 0;
+		street = "";
+		city = "";
+		state = "";
+		zip = 0;
+
+		next = nullptr;
+	}
+
 	//Functions involving the member report will go below
 	string get_date() {return this->date_of_service;};
 	string get_name() {return this->provider_name;};
@@ -222,6 +220,17 @@ public:
 		service_code = new_servcode;
 		comments = new_comments;
 		fee = new_fee;
+		
+		next = nullptr;
+	}
+	~Provider_Report() {
+
+		date_of_service = "";
+		time = "";
+		member_name = "";
+		member_code = 0;
+		service_code = 0;
+		fee = 0.0;
 		
 		next = nullptr;
 	}

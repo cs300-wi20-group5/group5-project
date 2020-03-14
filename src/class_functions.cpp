@@ -2,6 +2,29 @@
 
 //--------------------- People Table Functions ---------------------------
 
+//Destructor for hash table - person database
+PeopleTable::~PeopleTable() {
+	
+	for(int i = 0; i < 23; ++i) {
+		Node * temp;
+
+		if(table[i]) {
+			if(!table[i] -> next)
+				delete table[i];
+			else {
+				while(table[i] -> next) {
+					temp = table[i];
+					table[i] = temp -> next;
+					delete temp;
+				}
+
+				delete table[i];
+			}
+		}
+	}
+
+} 
+
 int PeopleTable::files_read(string fileName, int dataType) {
 	if(dataType == 1 || dataType == 2)
 		files_read_MP(fileName, dataType);
@@ -763,6 +786,7 @@ int Member::display_reports() {
 	}
 }
 
+
 //Display of individual info for members
 void Member_Report::display_member() {
 	cout << "Member Name: " << member_name << endl;
@@ -771,6 +795,9 @@ void Member_Report::display_member() {
 	cout << "Provider Name: " << provider_name << endl;
 	cout << "Service Received: " << service_name << endl << endl;
 }
+
+
+//Provider Directory display
 
 int Services() {
         string services[] = {"Archery Yoga\nIntense stretches mixed with archery.\n$99.99\n100001\n\n", "Concerning Therapy Talk\nTalking with a doctor about your problem.\n$50.50\n100002\n\n","Detoxification of Chocolate\nWhere they remove chocolate from your home.\n$499.99\n100003\n\n","Residential Treatment\nStay at the facility for a week,getting prepared for long term counseling.\n$900.00\n100004\n\n","Recovery Sessions\nBeing supervise when being around chocolate. This is for long term customers.\n$850.66\n100005\n\n","Terrific Meditation\nLearn what meditating is and how it can be use to get over your addiction.\n$110.00\n100006\n\n","Will Find a Substitution\nDoctor will help you find something to get your mind off of chocolate.\n$45.50\n100007\n\n"};
