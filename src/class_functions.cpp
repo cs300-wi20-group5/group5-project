@@ -7,34 +7,50 @@ int PeopleTable::files_read(string fileName, int dataType) {
 		files_read_MP(fileName, dataType);
 	if(dataType == 3)
 		files_read_PR(fileName);
+	if(dataType == 4)
+		files_read_MR(fileName);
 }
 
 void PeopleTable::files_read_MP(string fileName, int dataType) {
 	ifstream file1(fileName);
-	int id;
-	string str;
+	int id, zip;
+	string str, new_name, new_address, new_city, new_state;
 	Person * p = nullptr;
 
-	while(getline(file1, str, ',')) {	
+	while(getline(file1, str, ',') && !file1.eof()) {	
 		id = stoi(str);
-	    	if(getline(file1, str, '\n')) {
 
-			if(dataType == 1)
-				p = new Member(id, str);
-			if(dataType == 2)
-				p = new Provider(id, str);
+		getline(file1, new_name, ',');
 
-			int bucket = this -> hash_function(id);
-			Node * temp = new Node(p);
-			add_node(temp, bucket);
-	    	}
+		getline(file1, new_address, ',');
+
+		getline(file1, new_city, ',');
+
+		getline(file1, new_state, ',');
+
+		getline(file1, str, '\n');
+		zip = stoi(str);
+
+		cout << "zip: " << zip << endl;
+		
+		if(dataType == 1)
+			p = new Member(id, new_name, new_address, new_city, new_state, zip);
+		if(dataType == 2)
+			p = new Provider(id, new_name, new_address, new_city, new_state, zip);
+			
+		cout << "id: " << id << endl;
+		int bucket = this-> hash_function(id);
+
+		Node * temp = new Node(p);
+
+		add_node(temp, bucket);
 	}
 }
 
 void PeopleTable::files_read_PR(string fileName) {
 	ifstream file1(fileName);
     	int add_member_code, add_service_code, id;
-    	string add_time, add_date, add_name, temp, str;
+    	string add_time, add_date, add_name, temp, str, add_comments;
     	float add_fee;
    	
 	while(getline(file1, temp, ',') && !file1.eof()) {	
@@ -46,19 +62,45 @@ void PeopleTable::files_read_PR(string fileName) {
 
 		getline(file1, add_name, ',');
 
+		getline(file1, add_comments, ',');
+
 		getline(file1, temp, ',');
 		add_member_code = stoi(temp);
 
 		getline(file1, temp, ',');
 		add_service_code = stoi(temp);
+
 	    
 		//  not including delimiter here since its the last value, 
 		//  and with the delimiter it causes an error with stof 
 		getline(file1, temp, '\n');
 		add_fee = stof(temp);
 	     
-		add_provider_report(id, add_date, add_time, add_name, add_member_code, add_service_code, add_fee);
+		add_provider_report(id, add_date, add_time, add_name, add_comments, add_member_code, add_service_code, add_fee);
    	} 
+}
+
+void PeopleTable::files_read_MR(string fileName) {
+	ifstream file1(fileName);
+	int member_code, new_memcode, new_zip;
+	string new_date, new_name, new_service, new_memname, new_street, new_city, new_state, temp;	
+
+	while(getline(file1, temp, ',') && !file1.eof()) {
+		member_code = stoi(temp);
+
+		getline(file1, new_date, ',');	
+
+		getline(file1, new_name, ',');	
+
+		getline(file1, new_service, ',');	
+
+		getline(file1, new_memname, ',');	
+
+		getline(file1, temp, '\n');	
+		new_memcode = stoi(temp);
+
+		add_m_report(member_code, new_date, new_name, new_service, new_memname, new_memcode);
+	}
 }
 
 void PeopleTable::files_write(string fileName, int dataType) {
@@ -66,6 +108,8 @@ void PeopleTable::files_write(string fileName, int dataType) {
 	       	files_write_MP(fileName, dataType);
 	if(dataType == 3)
 		files_write_PR(fileName);
+	if(dataType == 4)
+		files_write_MR(fileName);
 }
 
 void PeopleTable::files_write_MP(string fileName, int dataType) {
@@ -78,6 +122,15 @@ void PeopleTable::files_write_MP(string fileName, int dataType) {
 			file1 << tmp->data->get_id(); 
 			file1 << ",";
 			file1 << tmp->data->get_name();
+			file1 << ",";
+			file1 << tmp->data->get_address();
+			file1 << ",";
+			file1 << tmp->data->get_city();
+			file1 << ",";
+			file1 << tmp->data->get_state();
+			file1 << ",";
+			file1 << tmp->data->get_zip();
+
 			file1 << endl;	
 		}
 		tmp = tmp->next;
@@ -99,10 +152,28 @@ void PeopleTable::files_write_PR(string fileName) {
 		if(this->table[i]) {	
 			while(tmp) {	
 				if(tmp->data->get_type() == 2)
-					tmp->data->wrapperFW(file1);
+					tmp->data->wrapperFW(file1, 2);
 				tmp = tmp->next;
 			}	
 		}
+	}
+	file1.close();
+}
+
+void PeopleTable::files_write_MR(string fileName) {
+	ofstream file1(fileName);
+	Node * tmp;
+
+	for(int i = 0; i < 23; ++i) {
+		tmp = this->table[i];
+		if(this->table[i]) {
+			while(tmp) {
+				if(tmp->data->get_type() == 1)
+					tmp->data->wrapperFW(file1, 1);
+				tmp = tmp->next;
+			}
+		}
+
 	}
 	file1.close();
 }
@@ -142,8 +213,14 @@ int PeopleTable::display2(Node * current) {
     if(!current)
         return 0;
     int id = current -> data -> get_id();
+    int type = current->data->get_type();
     string name = current -> data -> get_name();
-    cout << " id:" << id << " name:" << name;
+    string address = current->data->get_address();
+    string city = current->data->get_city();
+    string state = current->data->get_state();
+    int zip = current->data->get_zip();
+
+    cout << " id: " << id << " type: " << type << " name: " << name << " address: " << address << " city: " << city << " state: " << state << " zip: " << zip << endl;
     if(!current -> next)
         cout << "\n";
     else
@@ -214,7 +291,7 @@ int PeopleTable::find_hash_previous(int code, Node *& current) {
 
 
 //Adds provider report once all information has been recorded
-int PeopleTable::add_provider_report(int provider_code, string add_date, string add_time, string add_name, int add_member_code, int add_service_code, float add_fee)	{
+int PeopleTable::add_provider_report(int provider_code, string add_date, string add_time, string add_name, string add_comments, int add_member_code, int add_service_code, float add_fee)	{
 
 	int flag = 0;
 	Node * current;
@@ -224,7 +301,7 @@ int PeopleTable::add_provider_report(int provider_code, string add_date, string 
 		return 0;	//returns 0, code is not found within the system
 
 	//Calling provider report constructor to make the report
-	Provider_Report * p = new Provider_Report(add_date,add_time,add_name,add_member_code,add_service_code,add_fee);
+	Provider_Report * p = new Provider_Report(add_date,add_time,add_name,add_comments,add_member_code,add_service_code,add_fee);
 
 	//Calling function from Person Class
 	current -> data -> add_provider_type(p);
@@ -307,7 +384,7 @@ int PeopleTable::summary_report_internal(Node * current, int &total_providers, i
 }
 
 //Adds member reports based on member code
-int PeopleTable::add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode, string new_street, string new_city, string new_state, int new_zip) {
+int PeopleTable::add_m_report(int member_code, string new_date, string new_name, string new_service, string new_memname, int new_memcode) {
 	int flag = 0;
 	Node * current;
 
@@ -316,7 +393,7 @@ int PeopleTable::add_m_report(int member_code, string new_date, string new_name,
 		return 0;	//returns 0, code is not found within the system
 
 	//Calling member report constructor to make the report
-	Member_Report * p = new Member_Report(new_date, new_name, new_service, new_memname, new_memcode, new_street, new_city, new_state, new_zip);
+	Member_Report * p = new Member_Report(new_date, new_name, new_service, new_memname, new_memcode);
 
 	//Calling function from Person Class
 	current -> data -> add_member_type(p);
@@ -392,10 +469,17 @@ int Person::add_member_type(Member_Report * to_add)
 
 }
 // Wrapper function for writing data from a provider report to a file
-void Person::wrapperFW(ofstream & file1) {
-	Provider * ptr = dynamic_cast<Provider*>(this);
-	if(ptr)
-		ptr->fileWrite(file1);
+void Person::wrapperFW(ofstream & file1, int dataType) {
+	if(dataType == 2) {
+		Provider * ptr = dynamic_cast<Provider*>(this);
+		if(ptr)
+			ptr->fileWrite(file1);
+	}
+	if(dataType == 1) {
+		Member * ptr = dynamic_cast<Member*>(this);
+		if(ptr)
+			ptr->fileWrite(file1);
+	}
 }
 
 int Person::write_p_report(string &add_date, string &add_time, string &add_name, int &add_member_code, int &add_service_code, float &add_fee) {
@@ -454,12 +538,16 @@ int Person::info_modify( string modify, int option)
 {
 	if (option == 1)
 		name = modify;
-//	else if (option == 2)
-//		address = modify;
-//	else if (option ==3)
-//		city = modify;
-//	else if (option ==4)
-//		state = modify;
+	else if (option == 2)
+		address = modify;
+	else if (option ==3)
+		city = modify;
+	else if (option ==4)
+		state = modify;
+	else if (option == 5) {
+		zip = stoi(modify);
+	}
+		
 	else 
 		return false;	
 	return true;	
@@ -571,6 +659,8 @@ void Provider::fileWrite(ofstream & file1) {
 			file1 << ',';
 			file1 << temp->get_name();
 			file1 << ',';
+			file1 << temp->get_comments();
+			file1 << ',';
 			file1 << temp->get_mem_code();	
 			file1 << ',';
 			file1 << temp->get_serv_code();
@@ -592,6 +682,7 @@ int Provider_Report::display() {
 	cout << "Member Code: " << member_code << endl;
 	cout << "Service Code: " << service_code << endl;
 	cout << "Service Fee: $" << fee << endl;
+	cout << "Comments: " << comments << endl;
 	cout << endl;
 
 } 
@@ -622,23 +713,38 @@ int Member::add_to_end(Member_Report * to_add, Member_Report * current){
 	return 0;
 }
 
-int Member::write_report(string &add_member_name, string &add_member_code, string &add_street, string &add_city, string &add_state, int &add_zip, string & add_date, string &add_name, string &add_service) {
+int Member::write_report(string &add_member_name, string &add_member_code, string & add_date, string &add_name, string &add_service) {
 
 	if(this -> report) {
-	add_member_name = this -> report -> get_mem_name();
-	add_member_code = this -> report -> get_code();
-	add_street = this -> report -> get_street();
-	add_city = this -> report -> get_city();
-	add_state = this -> report -> get_state();
-	add_zip = this -> report -> get_zip();
-  add_date = this -> report -> get_date();
-	add_name = this -> report -> get_name();
-	add_service = this -> report -> get_service();
+		add_member_name = this -> report -> get_mem_name();
+		add_member_code = this -> report -> get_code();
+		add_date = this -> report -> get_date();
+		add_name = this -> report -> get_name();
+		add_service = this -> report -> get_service();
 
-	return 1;
+		return 1;
 	}
 	
 	return 0;
+}
+
+void Member::fileWrite(ofstream & file1) {
+	Member_Report * temp = report;
+
+	while(temp) {
+		file1 << temp->get_code();
+		file1 << ',';
+		file1 << temp->get_date();
+		file1 << ',';
+		file1 << temp->get_name();
+		file1 << ',';
+		file1 << temp->get_service();
+		file1 << ',';
+		file1 << temp->get_mem_name();
+		file1 << endl;
+
+		temp = temp->go_next();
+	}
 }
 
 //Displays all reports for specific member
@@ -655,6 +761,15 @@ int Member::display_reports() {
 			temp = temp -> go_next();
 		}
 	}
+}
+
+//Display of individual info for members
+void Member_Report::display_member() {
+	cout << "Member Name: " << member_name << endl;
+	cout << "Member Code: " << member_code << endl;
+  	cout << "Date of Service: " << date_of_service << endl;
+	cout << "Provider Name: " << provider_name << endl;
+	cout << "Service Received: " << service_name << endl << endl;
 }
 
 int Services() {
@@ -756,6 +871,15 @@ int date_checker(string date)
 	return true;
 }
 
+bool comment_checker(string comments) {
+	if(comments.size() > 100)
+		return false;
+	if(comments.size() < 1)
+		return false;
+	else
+		return true;
+}
+
 
 int time_checker(string time)
 {
@@ -798,14 +922,4 @@ int state_checker(string state)
 		return false;
 	return true;
 
-}
-
-//Display of individual info for members
-void Member_Report::display_member() {
-	cout << "Member Name: " << member_name << endl;
-	cout << "Member Code: " << member_code << endl;
-	cout << "Member Address: " << street << " " << city << ", " << state << "  " << zip << endl << endl;
-  cout << "Date of Service: " << date_of_service << endl;
-	cout << "Provider Name: " << provider_name << endl;
-	cout << "Service Received: " << service_name << endl << endl;
 }
